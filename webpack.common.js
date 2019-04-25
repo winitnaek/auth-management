@@ -9,10 +9,10 @@ const APP_DIR = path.resolve(__dirname, 'src');
 
 module.exports = {
     entry: [
-        APP_DIR + '/w2a_index.js' // Your appʼs entry point
+        APP_DIR + '/seca_index.js' // Your appʼs entry point
     ],
     output: {
-        filename: 'w2AdminBundle.js',
+        filename: 'secAdminBundle.js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'
     },
@@ -90,7 +90,7 @@ module.exports = {
             }
         ]),
         new CleanWebpackPlugin(['dist/*.*', 'dist/res', 'dist/src','dist/pdfjs']),
-        new ExtractTextPlugin({ filename: 'eeW2AdmBundle.css', allChunks: true }),
+        new ExtractTextPlugin({ filename: 'secAdminBundle.css', allChunks: true }),
         new ProgressBarPlugin(),
         new IndexGeneratorPlugin()
     ]
