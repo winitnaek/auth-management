@@ -12,7 +12,7 @@
         "id":"b55f51a1-0273-4457-8226-013a35d32080",
         "groupId":"Group1", 
         "title": "Admin",
-        "icon": "fas fa-file-alt fa-sm",
+        "icon": "fas fa-user-secret fa-sm",
         "tooltip": "Admin",
         "renderName": "administration",
         "visible": true
@@ -20,7 +20,7 @@
         "id":"e3893613-ae29-4243-a004-370512da544f",
         "groupId":"Group1", 
         "title": "Accounts",
-        "icon": "fas fa-file-alt fa-sm",
+        "icon": "fas fa-users fa-sm",
         "tooltip": "Accounts",
         "renderName": "accounts",
         "visible": true
@@ -28,7 +28,7 @@
         "id":"270a5c1f-14d3-4087-a196-d93a908b7cd4",
         "groupId":"Group1", 
         "title": "Manage Config",
-        "icon": "fas fa-file-alt fa-sm",
+        "icon": "fas fa-table fa-sm",
         "tooltip": "Manage Config",
         "renderName": "ssoConfigs",
         "visible": true
@@ -36,7 +36,7 @@
         "id":"0c36af3e-095c-44d4-91dc-6767a279b8ea",
         "groupId":"Group1", 
         "title": "Audit Logs",
-        "icon": "fas fa-file-alt fa-sm",
+        "icon": "fas fa-tasks fa-sm",
         "tooltip": "Audit Logs",
         "renderName": "auditLogs",
         "visible": true
