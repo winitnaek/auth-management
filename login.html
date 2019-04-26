@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Signin</title>
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="./Default.css">
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="./signin.css">
+  <link rel="shortcut icon" href="./app/img/favicon.ico">
+</head>
+<body>
+    <script src="./u.js"></script>
+    <div class="container text-center"  id="cont">
+        <div class="row align-items-center ">
+          <div class="col-md-4"></div>
+          <div class="col-md-4 ">
+            <form class="form-signin" action="javascript: macWs.doLogin(this)">
+                  <img class="mb-4" src="./app/img/logo_BSI.png" alt="">
+                  <h1 class="h3 mb-3 font-weight-light">Please Sign In</h1>
+                  <label for="inputUsername" class="sr-only">Email address</label>
+                  <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
+                  <div id="userHelpID">
+                    <small id="userHelp" class="text-danger">
+                      Unable to login. Please use valid user. 
+                    </small>      
+                  </div>
+                  <label for="inputPassword" class="sr-only">Password</label>
+                  <input type="password" id="inputPassword" class="form-control mt-1" placeholder="Password" required="">
+                  <div class="checkbox mb-2 mt-1">
+                    <label>
+                    
+                    </label>
+                  </div>
+                  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                  <p class="mt-5 text-muted">© 2017-2019</p>
+                </form>
+          </div>
+        
+        </div>
+      </div> 
+</body>
+<script src="./res/js/jquery-3.2.1.min.js"></script>
+<script src="./i.js"></script>
+</html>

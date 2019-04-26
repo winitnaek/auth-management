@@ -66,6 +66,7 @@ module.exports = {
             ['NODE_ENV',]),
         new CopyWebpackPlugin([
             { from: './index.html', to: '../dist/index.html' },
+            { from: './login.html', to: '../dist/login.html' },
             { from: './templates.html', to: '../dist/templates.html' },
             { from: './manifest.json', to: '../dist/manifest.json' },
             {
@@ -87,7 +88,28 @@ module.exports = {
                 context: './res/pdfjs/build',
                 from: '**/*',
                 to: '../dist/pdfjs/build'
-            }
+            },
+            { /* Bootstrap */
+                from: './res/js/bootstrap-4.3.1-dist/css/bootstrap.min.css',
+                to: '../dist/Default.css'
+              },
+              ,{
+                from: './res/css/signin.css',
+                to: '../dist/signin.css'
+              },
+            {
+                from: './index.js',
+                to: '../dist/i.js'
+              },
+              {
+                from: './utils.js',
+                to: '../dist/u.js'
+              },
+              { /* Images */
+                context: './res/app/img',
+                from: '**/*',
+                to: '../dist/app/img'
+              }
         ]),
         new CleanWebpackPlugin(['dist/*.*', 'dist/res', 'dist/src','dist/pdfjs']),
         new ExtractTextPlugin({ filename: 'secAdminBundle.css', allChunks: true }),
