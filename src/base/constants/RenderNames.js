@@ -5,3 +5,4 @@ export const RN_ADMINISTRATION='administration';
 export const RN_ACCOUNTS = 'accounts';
 export const RN_SSO_CONFIGS = 'ssoConfigs';
 export const RN_AUDIT_LOGS = 'auditLogs';
+export const RN_LOGIN = 'login';

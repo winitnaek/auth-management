@@ -6,7 +6,7 @@
     "bundleName": "secAdminBundle.js",
     "version": "1",
     "buildNo":"2019_04_23_SA",
-    "renderFunction": "renderW2AdmApplication",
+    "renderFunction": "renderSecAdmApplication",
     "macVersion":"1.0", 
     "areas": [ {
         "id":"b55f51a1-0273-4457-8226-013a35d32080",

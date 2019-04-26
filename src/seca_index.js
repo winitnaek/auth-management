@@ -28,15 +28,12 @@ var empId = usrobj.userId;
  * @param {*} elem 
  * @param {*} renderName 
  */
-function renderW2AdmApplication(elem, renderName) {
+function renderSecAdmApplication(elem, renderName) {
     setAppAnchor(elem);
     setAppDataset(dataset);
     if(renderName==rname.RN_ADMINISTRATION){
         const element = <h1>Admin</h1>;
-        ReactDOM.render(<Provider store={store}>
-            <Example/>
-            </Provider>,
-           document.querySelector('#'+elem));
+        ReactDOM.render(element, document.querySelector('#'+elem));
     }else if(renderName==rname.RN_ACCOUNTS){
         const element = <h1>Accounts</h1>;
         ReactDOM.render(element, document.querySelector('#'+elem));
@@ -167,8 +164,8 @@ const unMountNMountContainerNode = () => {
     $('<div id="' + c.appContentId + '" class="main-content p-5 m-5"></div>').insertAfter($("#" + c.navId));
 };
 
-module.exports = renderW2AdmApplication;
-window.renderW2AdmApplication = renderW2AdmApplication;
+module.exports = renderSecAdmApplication;
+window.renderSecAdmApplication = renderSecAdmApplication;
 
 module.exports = appDataset;
 window.appDataset = appDataset;

@@ -1,7 +1,7 @@
 const svcpath = '/cfws/';
 const apiversion = 'v1';
 const apir = 'r/';
-const w2admws = '/EEW2AdminService';
+const w2admws = '/EchoService';
 const apiprefix ='/api'
 class urlUtils {
   static buildURL(urlin) {
