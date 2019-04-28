@@ -97,6 +97,10 @@ module.exports = {
                 from: './res/css/signin.css',
                 to: '../dist/signin.css'
               },
+              {
+                from: './check.js',
+                to: '../dist/c.js'
+              },
             {
                 from: './index.js',
                 to: '../dist/i.js'
