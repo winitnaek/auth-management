@@ -7,7 +7,7 @@ import Progress from './app/common/Progress';
 import * as manifest from '../build/_manifest';
 import * as c from './base/constants/IndexConstants';
 import {makeNavs,makeSearch} from './base/template/navGenerator';
-import Example from './app/admin/Example';
+
 let store = configureStore();
 
 //Temporary set user in session:======Comment this when deployed with MAC======
