@@ -173,3 +173,75 @@ export function deleteTenantSuccess(deleted) {
 export function deleteTenantError(deleted) {
     return { type: types.DELETED_TENENT_ERROR, deleted };
 }
+export function getTenant(includeImported) {
+    return function (dispatch, getState) {
+        const state = getState();
+        return adminAPI.getTenant(includeImported).then(tenants => {
+            if(tenants){
+                if(tenants && tenants.message){
+                    dispatch(getTenantError(tenants));
+                }else if(tenants){
+                    dispatch(getTenantSuccess(tenants));
+                }
+            }else{
+                throw tenants;
+            }
+        }).catch(error => {
+            generateAppErrorEvent(error.type,error.status,error.message,error);
+        });
+    };
+}
+export function getTenantSuccess(tenants) {
+    return { type: types.GET_TENANTS_SUCCESS, tenants };
+}
+export function getTenantError(tenants) {
+    return { type: types.GET_TENANTS_ERROR, tenants };
+}
+export function getSyncInfo() {
+    return function (dispatch, getState) {
+        const state = getState();
+        return adminAPI.getSyncInfo().then(syncInfo => {
+            if(syncInfo){
+                if(syncInfo && syncInfo.message){
+                    dispatch(getSyncInfoError(syncInfo));
+                }else if(syncInfo){
+                    dispatch(getSyncInfoSuccess(syncInfo));
+                }
+            }else{
+                throw syncInfo;
+            }
+        }).catch(error => {
+            generateAppErrorEvent(error.type,error.status,error.message,error);
+        });
+    };
+}
+export function getSyncInfoSuccess(syncInfo) {
+    return { type: types.GET_SYNC_INFO_SUCCESS, syncInfo };
+}
+export function getSyncInfoError(syncInfo) {
+    return { type: types.GET_SYNC_INFO_ERROR, syncInfo };
+}
+export function getProductsByTenants(accountName) {
+    return function (dispatch, getState) {
+        const state = getState();
+        return adminAPI.getProductsByTenants().then(products => {
+            if(products){
+                if(products && products.message){
+                    dispatch(getProductsByTenantsError(products));
+                }else if(products){
+                    dispatch(getProductsByTenantsSuccess(products));
+                }
+            }else{
+                throw products;
+            }
+        }).catch(error => {
+            generateAppErrorEvent(error.type,error.status,error.message,error);
+        });
+    };
+}
+export function getProductsByTenantsSuccess(products) {
+    return { type: types.GET_PRODUCT_BYTENANTS_SUCCESS, products };
+}
+export function getProductsByTenantsError(products) {
+    return { type: types.GET_PRODUCT_BYTENANTS_ERROR, products };
+}

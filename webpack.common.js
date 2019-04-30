@@ -113,6 +113,10 @@ module.exports = {
                 context: './res/app/img',
                 from: '**/*',
                 to: '../dist/app/img'
+              },
+              ,{
+                from: './res/css/app.css',
+                to: '../dist/app_Default.css'
               }
         ]),
         new CleanWebpackPlugin(['dist/*.*', 'dist/res', 'dist/src','dist/pdfjs']),

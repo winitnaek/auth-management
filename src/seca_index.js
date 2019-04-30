@@ -7,7 +7,7 @@ import Progress from './app/common/Progress';
 import * as manifest from '../build/_manifest';
 import * as c from './base/constants/IndexConstants';
 import {makeNavs,makeSearch} from './base/template/navGenerator';
-
+import AdminComponent from './app/admin/AdminComponent';
 let store = configureStore();
 
 //Temporary set user in session:======Comment this when deployed with MAC======
@@ -32,8 +32,13 @@ function renderSecAdmApplication(elem, renderName) {
     setAppAnchor(elem);
     setAppDataset(dataset);
     if(renderName==rname.RN_ADMINISTRATION){
-        const element = <h1>Admin</h1>;
-        ReactDOM.render(element, document.querySelector('#'+elem));
+        //const element = <h1>Admin</h1>;
+        //ReactDOM.render(element, document.querySelector('#'+elem));
+        ReactDOM.render(
+            <Provider store={store}>
+            <AdminComponent/>
+            </Provider>,
+            document.querySelector('#'+elem));
     }else if(renderName==rname.RN_ACCOUNTS){
         const element = <h1>Accounts</h1>;
         ReactDOM.render(element, document.querySelector('#'+elem));
@@ -156,12 +161,12 @@ const checkIfAreasDefined = (areas) => {
 };
 
 const renderWelcomePage = (elem) => {
-    document.getElementById(elem).innerHTML = "<h3>Welcome to the Application Module Test Page. Please click on the links to load your single page application.</h3>";
+    document.getElementById(elem).innerHTML = "<h3>Welcome to the Security Administration Application Page. Please click on the links to perform different administrative activities for the applications.</h3>";
 };
 
 const unMountNMountContainerNode = () => {
     $("div").remove("#" + c.appContentId);
-    $('<div id="' + c.appContentId + '" class="main-content p-5 m-5"></div>').insertAfter($("#" + c.navId));
+    $('<div id="' + c.appContentId + '" class="main-content p-4 m-4 mx-auto"></div>').insertAfter($("#" + c.navId));
 };
 
 module.exports = renderSecAdmApplication;

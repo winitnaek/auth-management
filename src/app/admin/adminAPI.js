@@ -125,5 +125,55 @@ class adminActionAPI {
             return error;
         });
     }
+    static getTenant(includeImported) {
+        let paramurl = `${'?includeImported='}${includeImported}`;
+        var svcs_url = `${svcs.GET_TENANTS}${paramurl}`;
+        return fetch(URLUtils.buildURL(svcs_url), {
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                var errorCode = response.status;
+                var errorMsg = 'Unable to Get Tenants. ' + ADMIN_ERROR_MSG;
+                return new AppError(errorMsg, errorCode);
+            }
+        }).catch(error => {
+            return error;
+        });
+    }
+    static getSyncInfo() {
+        var svcs_url = `${svcs.GET_SYNCINFO}`;
+        return fetch(URLUtils.buildURL(svcs_url), {
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                var errorCode = response.status;
+                var errorMsg = 'Unable to Get Sync Info. ' + ADMIN_ERROR_MSG;
+                return new AppError(errorMsg, errorCode);
+            }
+        }).catch(error => {
+            return error;
+        });
+    }
+    static getProductsByTenants(accountName) {
+        let paramurl = `${'?accountName='}${accountName}`;
+        var svcs_url = `${svcs.GET_PRODUCT_BY_TENANTS}${paramurl}`;
+        return fetch(URLUtils.buildURL(svcs_url), {
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                var errorCode = response.status;
+                var errorMsg = 'Unable to Get Products By Tenants. ' + ADMIN_ERROR_MSG;
+                return new AppError(errorMsg, errorCode);
+            }
+        }).catch(error => {
+            return error;
+        });
+    }
 }
 export default adminActionAPI;

@@ -3,5 +3,13 @@ export default {
     isAuthenticated:false,
     isLoggedOut:false,
     userLoggedIn:''
+  },
+  admindata:{
+    lastFullSyncDt:'',
+    lastSFSyncDt:'',
+    lastTPFSyncDt:'',
+    sfSyncEnabled:'',
+    tpfSyncEnabled:'',
+    adminTenants:[]
   }
 }
