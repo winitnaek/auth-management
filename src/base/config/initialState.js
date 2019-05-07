@@ -14,5 +14,13 @@ export default {
   },
   accountsdata:{
     accounts:[]
+  },
+  linkdata: {
+    linked: false,
+    accountid:''
+  },
+  unlinkdata: {
+    unlinked: false,
+    accountid:''
   }
 }

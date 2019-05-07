@@ -176,6 +176,16 @@ export function deleteTenantError(deleted) {
 export function getTenants(includeImported) {
     return function (dispatch, getState) {
         const state = getState();
+        let data = [{'accountId':'100', 'accountName':'IBM', 'productName':'TPF','dataset':'Dataset IBM', 'isEnabled':true, 'configname':'IBM Staging'},{accountId:'101', accountName:'Panera', productName:'TF',dataset:'Dataset Pan','isEnabled':true, 'configname':''},{accountId:'102', accountName:'Dannys', productName:'CF',dataset:'Dataset Dan', 'isEnabled':true, 'configname':'Dannys prodconf'}];
+        let accountsdata = {
+            accounts:data
+        }
+        return new Promise((resolve, reject) => { 
+        dispatch(getTenantsSuccess(accountsdata));  
+        setTimeout(() => resolve(accountsdata), 100); 
+        }); 
+    /*return function (dispatch, getState) {
+        const state = getState();
         return adminAPI.getTenants(includeImported).then(tenants => {
             if(tenants){
                 if(tenants && tenants.message){
@@ -188,14 +198,14 @@ export function getTenants(includeImported) {
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
-        });
+        });*/
     };
 }
-export function getTenantsSuccess(tenants) {
-    return { type: types.GET_TENANTS_SUCCESS, tenants };
+export function getTenantsSuccess(accountsdata) {
+    return { type: types.GET_TENANTS_SUCCESS, accountsdata };
 }
-export function getTenantsError(tenants) {
-    return { type: types.GET_TENANTS_ERROR, tenants };
+export function getTenantsError(accountsdata) {
+    return { type: types.GET_TENANTS_ERROR, accountsdata };
 }
 export function getSyncInfo() {
     return function (dispatch, getState) {

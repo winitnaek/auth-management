@@ -12,6 +12,8 @@ import AccountsComponent from './app/accounts/AccountsComponent';
 import AuditLogsComponent from './app/auditlogs/AuditLogsComponent';
 import SSOConfigComponent from './app/ssoconfigs/SSOConfigComponent';
 import {getSyncInfo,getTenants}  from './app/admin/adminAction';
+import {loadLinkConfig,loadUnLinkConfig}  from './app/accounts/accountsAction';
+
 let store = configureStore();
 
 //Temporary set user in session:======Comment this when deployed with MAC======
@@ -36,7 +38,6 @@ function renderSecAdmApplication(elem, renderName) {
     setAppAnchor(elem);
     setAppDataset(dataset);
     if(renderName==rname.RN_ADMINISTRATION){
-        //ReactDOM.render(<Provider store={store}><Progress/></Provider>,document.querySelector('#'+elem));
         store.dispatch(getSyncInfo()).then((result) => {
          renderAdminData(elem);
          //setTimeout(function() {    
@@ -46,11 +47,15 @@ function renderSecAdmApplication(elem, renderName) {
              throw new SubmissionError({_error:  error });
         });
     }else if(renderName==rname.RN_ACCOUNTS){
-        ReactDOM.render(
-            <Provider store={store}>
-            <AccountsComponent/>
-            </Provider>,
-            document.querySelector('#'+elem));
+        store.dispatch(getTenants(true)).then((result) => {
+            renderAccountsData(elem);
+            //setTimeout(function() {    
+            //    renderAdminData(elem);
+            //}.bind(this), 200)
+           }).catch((error) => {
+                throw new SubmissionError({_error:  error });
+           });
+        
     }else if(renderName==rname.RN_SSO_CONFIGS){
         ReactDOM.render(
             <Provider store={store}>
@@ -64,6 +69,17 @@ function renderSecAdmApplication(elem, renderName) {
             </Provider>,
             document.querySelector('#'+elem));
     }
+}
+/**
+ * renderAccountsData
+ * @param {*} elem 
+ */
+function renderAccountsData(elem) {
+    ReactDOM.render(
+        <Provider store={store}>
+        <AccountsComponent/>
+        </Provider>,
+        document.querySelector('#'+elem));
 }
 /**
  * renderAdminData
@@ -91,19 +107,19 @@ function setAppDataset(dataset){
 function appDataset(){
    return APP_DATASET;
 }
-function onloadPdfData(id) {
-    var w2data = {
-        loadeew2: true,
-        eew2id: id
+function onLinkConfig(id) {
+    var linkdata = {
+        linkdata: true,
+        accountid: id
     }
-    store.dispatch(loadPdfData(w2data));
+    store.dispatch(loadLinkConfig(linkdata));
 }
-function onloadCompData(id){
-    var compdata = {
-        loadcomp: true,
-        compid: id
+function onUnLinkConfig(id){
+    var unlinkdata = {
+        unlinkdata: true,
+        accountid: id
     }
-    store.dispatch(loadCompData(compdata));
+    store.dispatch(loadUnLinkConfig(unlinkdata));
 }
 
 const resolveTemplates = async () => {
@@ -204,11 +220,11 @@ window.appDataset = appDataset;
 module.exports = appAnchor;
 window.appAnchor = appAnchor;
 
-module.exports = onloadPdfData;
-window.onloadPdfData = onloadPdfData;
+module.exports = onLinkConfig;
+window.onLinkConfig = onLinkConfig;
 
-module.exports = onloadCompData;
-window.onloadCompData = onloadCompData;
+module.exports = onUnLinkConfig;
+window.onUnLinkConfig = onUnLinkConfig;
 
 let w2aIndex = {
     'resolveTemplates': resolveTemplates,

@@ -6,7 +6,7 @@ import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {linkSSOConfigToTenant}  from './accountsAction';
+import {linkSSOConfigToTenant,loadLinkConfig,loadUnLinkConfig}  from './accountsAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 class AccountsComponent extends React.Component {
     constructor(props) {
@@ -23,14 +23,35 @@ class AccountsComponent extends React.Component {
                 { name: 'configname', type: 'string' }
             ],
             pagesize: 5,
-            localdata: []
+            localdata:this.props.accountsdata
         };
         this.state = {
             source: source
         };
     }
-    renderAccountsUI(accountsdata){
-        if(!accountsdata){
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.linkdata && nextProps.linkdata.linked) {
+            //$('[data-toggle="tooltip"]').tooltip('hide');
+            var linkdata = {
+                linked: false,
+                accountid:''
+            }
+            this.props.actions.loadLinkConfig(linkdata);
+            //let data = this.refs.eew2Grid.getrowdata(nextProps.w2data.eew2id);
+            //this.handleShowPDF(data);
+        }else if(nextProps.unlinkdata && nextProps.unlinkdata.unlinked){
+            //$('[data-toggle="tooltip"]').tooltip('hide');
+            var unlinkdata = {
+                unlinked: false,
+                accountid:''
+              }
+            this.props.actions.loadUnLinkConfig(unlinkdata);
+            //let data = this.refs.eew2Grid.getrowdata(nextProps.compdata.compid);
+            //this.handleShowMessages(data, null);
+        }
+    }
+    renderAccountsUI(accounts){
+        if(accounts){
             const linkUInLink = (id) => {
                 console.log(id);
             }
@@ -42,10 +63,12 @@ class AccountsComponent extends React.Component {
             { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Enabled', datafield: 'isEnabled',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Attached Config', datafield: 'configname',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Link/UnLink', cellsalign: 'center', width: '65', align: 'center', datafield: 'Delete', columntype: 'button', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return 'SSO Config';
-               }, buttonclick: function (id) {
-                   linkUInLink(id);
+            { text: 'Config', cellsalign: 'center', align: 'center', datafield: 'Delete', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
+                if(rowdata.configname){
+                    return `<a href="#" title="${'Un-Link'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Un-Link'}</button></div></a>`;
+                }else{
+                    return `<a href="#" title="${'Link'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;" class="btn btn-link align-self-center" onClick={onLinkConfig('${ndex}')}>${'Link'}</button></div></a>`;
+                }
                }
             },
             ];
@@ -86,10 +109,10 @@ class AccountsComponent extends React.Component {
 };
 function mapStateToProps(state) {
     return {
-        accountsdata: state.accountsdata
+        accountsdata: state.accountsdata.accounts
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({linkSSOConfigToTenant}, dispatch) }
+    return { actions: bindActionCreators({linkSSOConfigToTenant,}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AccountsComponent);

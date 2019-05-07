@@ -5,7 +5,7 @@ import accountsAPI from './accountsAPI';
  * adminAction
  * @author Vinit
  */
-export function linkSSOConfigToTenant() {
+export function linkSSOConfigToTenant(accountName, ssoConfigId, toUnlink) {
     return function (dispatch, getState) {
         const state = getState();
         return accountsAPI.linkSSOConfigToTenant(accountName, ssoConfigId, toUnlink).then(islinked => {
@@ -52,4 +52,10 @@ export function testSSOConfigurationSuccess(issuccess) {
 }
 export function testSSOConfigurationError(issuccess) {
     return { type: types.TEST_SSOCONFIG_ERROR, issuccess };
+}
+export function loadUnLinkConfig(unlinkdata) {
+    return {type:types.LOAD_UNLINKCONFIG_DATA,unlinkdata};
+}
+export function loadLinkConfig(linkdata){
+    return {type:types.LOAD_LINKCONFIG_DATA,linkdata};
 }
