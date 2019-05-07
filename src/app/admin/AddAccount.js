@@ -1,18 +1,41 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Col, Input} from 'reactstrap';
 import Select from 'react-select';
-import AsyncSelect from 'react-select/lib/Async';
-import {divStyleep,selZindx} from '../../base/constants/AppConstants';
 class AddAccount extends React.Component {
     constructor(props) {
         super(props);
+        let accounts =[];
+        accounts.push({'value':'IBM','label':'IBM'},{'value':'Panera','label':'Panera'},{'value':'Dannys','label':'Dannys'});
+        let products =[];
+        products.push({'value':'TPF','label':'TPF'},{'value':'CF','label':'CF'},{'value':'TF','label':'TF'});
         this.state = {
-            showAddAccount: this.props.showAddAccount
+            showAddAccount: this.props.showAddAccount,
+            accounts:accounts,
+            products:products,
+            selectedAccount:'',
+            selectedProduct:''
         };
         this.toggleUIConfirmOk = this.toggleUIConfirmOk.bind(this);
         this.toggleUIConfirmCancel = this.toggleUIConfirmCancel.bind(this);
+        this.handleAccountChange = this.handleAccountChange.bind(this);
+        this.handleProductChange = this.handleProductChange.bind(this);
     }
-
+    handleAccountChange(selectedAccount){
+        console.log('selectedAccount');
+        console.log(selectedAccount);
+        this.setState({ selectedAccount});
+        let account = `${selectedAccount.value}`;
+        console.log('account');
+        console.log(account);
+    }
+    handleProductChange(selectedProduct){
+        console.log('selectedProduct');
+        console.log(selectedProduct);
+        this.setState({ selectedProduct});
+        let product = `${selectedProduct.value}`;
+        console.log('product');
+        console.log(product);
+    }
     toggleUIConfirmOk() {
         this.props.handleOk();
     }
@@ -32,7 +55,6 @@ class AddAccount extends React.Component {
                                 <Col sm={6} style={{ zIndex: 100 }}>
                                     <Select
                                         name="selAccount"
-                                        className={selZindx}
                                         value={this.state.selectedAccount}
                                         onChange={this.handleAccountChange}
                                         isSearchable={false}
@@ -46,10 +68,9 @@ class AddAccount extends React.Component {
                             <FormGroup row>
                                 <Label sm={1}></Label>
                                 <Label sm={3}>Select Product</Label>
-                                <Col sm={6} style={{ zIndex: 100 }}>
+                                <Col sm={6} style={{ zIndex: 90 }}>
                                     <Select
                                         name="selProduct"
-                                        className={selZindx}
                                         value={this.state.selectedProduct}
                                         onChange={this.handleProductChange}
                                         isSearchable={false}
@@ -63,7 +84,7 @@ class AddAccount extends React.Component {
                             <FormGroup row>
                                 <Label sm={1}></Label>
                                 <Label sm={3}>Dataset/Comp CID</Label>
-                                <Col sm={6} style={{ zIndex: 100 }}>
+                                <Col sm={6} style={{ zIndex: 80 }}>
                                     <Input type="text" name="dataset" id="datasetcompcid" placeholder="Enter Dataset/Comp CID" />
                                 </Col>
                             </FormGroup>

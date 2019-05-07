@@ -173,15 +173,15 @@ export function deleteTenantSuccess(deleted) {
 export function deleteTenantError(deleted) {
     return { type: types.DELETED_TENENT_ERROR, deleted };
 }
-export function getTenant(includeImported) {
+export function getTenants(includeImported) {
     return function (dispatch, getState) {
         const state = getState();
-        return adminAPI.getTenant(includeImported).then(tenants => {
+        return adminAPI.getTenants(includeImported).then(tenants => {
             if(tenants){
                 if(tenants && tenants.message){
-                    dispatch(getTenantError(tenants));
+                    dispatch(getTenantsError(tenants));
                 }else if(tenants){
-                    dispatch(getTenantSuccess(tenants));
+                    dispatch(getTenantsSuccess(tenants));
                 }
             }else{
                 throw tenants;
@@ -191,16 +191,31 @@ export function getTenant(includeImported) {
         });
     };
 }
-export function getTenantSuccess(tenants) {
+export function getTenantsSuccess(tenants) {
     return { type: types.GET_TENANTS_SUCCESS, tenants };
 }
-export function getTenantError(tenants) {
+export function getTenantsError(tenants) {
     return { type: types.GET_TENANTS_ERROR, tenants };
 }
 export function getSyncInfo() {
     return function (dispatch, getState) {
         const state = getState();
-        return adminAPI.getSyncInfo().then(syncInfo => {
+
+        let data = [{'accountId':'100', 'accountName':'IBM', 'productName':'TPF','dataset':'Dataset IBM'},{accountId:'101', accountName:'Panera', productName:'TF',dataset:'Dataset Pan'},{accountId:'102', accountName:'Dannys', productName:'CF',dataset:'Dataset Dan'}];
+        let  dt = new Date();
+        let admindata = {
+            lastFullSyncDt:'04-30-2019 12:58:59',
+            lastSFSyncDt:dt.toString(),
+            lastTPFSyncDt:dt.toString(),
+            sfSyncEnabled:true,
+            tpfSyncEnabled:true,
+            adminTenants:data
+          }
+          return new Promise((resolve, reject) => { 
+            dispatch(getSyncInfoSuccess(admindata));  
+            setTimeout(() => resolve(admindata), 100); 
+          }); 
+        /*return adminAPI.getSyncInfo().then(syncInfo => {
             if(syncInfo){
                 if(syncInfo && syncInfo.message){
                     dispatch(getSyncInfoError(syncInfo));
@@ -212,11 +227,11 @@ export function getSyncInfo() {
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
-        });
+        });*/
     };
 }
-export function getSyncInfoSuccess(syncInfo) {
-    return { type: types.GET_SYNC_INFO_SUCCESS, syncInfo };
+export function getSyncInfoSuccess(admindata) {
+    return { type: types.GET_SYNC_INFO_SUCCESS, admindata };
 }
 export function getSyncInfoError(syncInfo) {
     return { type: types.GET_SYNC_INFO_ERROR, syncInfo };

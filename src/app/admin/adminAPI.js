@@ -125,7 +125,7 @@ class adminActionAPI {
             return error;
         });
     }
-    static getTenant(includeImported) {
+    static getTenants(includeImported) {
         let paramurl = `${'?includeImported='}${includeImported}`;
         var svcs_url = `${svcs.GET_TENANTS}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {

@@ -13,7 +13,6 @@ import AddAccount from './AddAccount';
 class AdminComponent extends React.Component {
     constructor(props) {
         super(props);
-        let data = [{'accountId':'100', 'accountName':'IBM', 'productName':'TPF','dataset':'Dataset IBM'},{accountId:'101', accountName:'Panera', productName:'TF',dataset:'Dataset Pan'},{accountId:'102', accountName:'Dannys', productName:'CF',dataset:'Dataset Dan'}];
         let source =
         {
             datatype: "json",
@@ -24,15 +23,28 @@ class AdminComponent extends React.Component {
                 { name: 'dataset', type: 'string' }
             ],
             pagesize: 5,
-            localdata: data
+            localdata: this.props.admindata.adminTenants
         };
-        let tpfSyncOnOffLabel ='TPF Sync Off';
         let sfSyncOnOffLabel  ='SaleForce Sync Off';
+        let tpfSyncOnOffLabel ='TPF Sync Off';
+        let isSfSyncOnOff=false;
+        let isTPFSyncOnOff=false;
+        if(this.props.admindata.sfSyncEnabled){
+            isSfSyncOnOff =true;
+            sfSyncOnOffLabel='SaleForce Sync On';
+        }
+        if(this.props.admindata.tpfSyncEnabled){
+            isTPFSyncOnOff =true;
+            sfSyncOnOffLabel='TPF Sync On';
+        }
+        
         this.state = {
             source: source,
             openAddAdminAccount:false,
             tpfSyncOnOffLabel:tpfSyncOnOffLabel,
-            sfSyncOnOffLabel:sfSyncOnOffLabel
+            sfSyncOnOffLabel:sfSyncOnOffLabel,
+            isSfSyncOnOff:isSfSyncOnOff,
+            isTPFSyncOnOff:isTPFSyncOnOff
         };
         this.onAddAdminAccount = this.onAddAdminAccount.bind(this);
         this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
@@ -64,7 +76,7 @@ class AdminComponent extends React.Component {
         }
     }
     renderAdminUI(admindata){
-        if(!admindata){
+        if(admindata){
             const removeMe = (id) => {
                 console.log(id);
                 var selectedrowindex = this.refs.adminAccountGrid.getselectedrowindex();
@@ -81,9 +93,10 @@ class AdminComponent extends React.Component {
                     }
                 }
             }
-            let date = new Date(), y = date.getFullYear(), m = date.getMonth();
-            let firstDay = new Date(y, m, 1);
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
+            var lastsfsyncdt = new Date(admindata.lastSFSyncDt);
+            var lasttpfsyncdt = new Date(admindata.lastTPFSyncDt);
+        
             let columns =
             [
             { text: 'Account', datafield: 'accountName',  cellsalign: 'center', width: 'auto', align: 'center'},
@@ -112,7 +125,7 @@ class AdminComponent extends React.Component {
                                                 <Label sm={1}></Label>
                                                 <Label sm={4}>Last Full SalesForce Sync Date/Time</Label>
                                                 <Col sm={3} className="p-2">
-                                                    <Label>04-30-2019 12:58:59</Label>
+                                                    <Label>{admindata.lastFullSyncDt}</Label>
                                                 </Col>
                                                 <Col sm={3}>
                                                     <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Re-Run Full SalesForce Sync</Button>
@@ -137,24 +150,24 @@ class AdminComponent extends React.Component {
                                                 <Label sm={4}>Last SalesForce Sync Date/Time</Label>
                                                 <Col sm={3}>
                                                     <JqxDateTimeInput ref='lastSFSyncDt' height={30} width={175} animationType={'fade'}
-                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${firstDay}`} formatString="MM-dd-yyyy HH:mm:ss"/>
+                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastsfsyncdt}`} formatString="MM-dd-yyyy HH:mm:ss"/>
                                                 </Col>
                                                 <Col sm={2}>
                                                     <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Sync SalesForce</Button>
                                                 </Col>
-                                                <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.sfSyncOnOffChanged} name="sfSyncOnOff" label={this.state.sfSyncOnOffLabel} />
+                                                <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.sfSyncOnOffChanged} defaultChecked={this.state.isSfSyncOnOff} name="sfSyncOnOff" label={this.state.sfSyncOnOffLabel} />
                                             </FormGroup>
                                             <FormGroup row style={{ marginBottom: 0 }}>
                                                 <Label sm={1}></Label>
                                                 <Label sm={4}>Last TPF Sync Date/Time</Label>
                                                 <Col sm={3}>
                                                       <JqxDateTimeInput ref='lastTPFSyncDt' height={30} width={175} animationType={'fade'}
-                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${firstDay}`} formatString="MM-dd-yyyy HH:mm:ss"/>
+                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${lasttpfsyncdt}`} formatString="MM-dd-yyyy HH:mm:ss"/>
                                                 </Col>
                                                 <Col sm={2}>
                                                     <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Sync TPF</Button>
                                                 </Col>
-                                                <CustomInput type="switch" innerRef={(input) => this.tpfSyncOnOff = input}  id="tpfSyncOnOff" defaultChecked={false} onChange={this.tpfSyncOnOffChanged} name="tpfSyncOnOff" label={this.state.tpfSyncOnOffLabel} />
+                                                <CustomInput type="switch" innerRef={(input) => this.tpfSyncOnOff = input}  id="tpfSyncOnOff" defaultChecked={this.state.isTPFSyncOnOff} onChange={this.tpfSyncOnOffChanged} name="tpfSyncOnOff" label={this.state.tpfSyncOnOffLabel} />
                                             </FormGroup>
                                         </Form>
                                     </CardBody>

@@ -11,5 +11,8 @@ export default {
     sfSyncEnabled:'',
     tpfSyncEnabled:'',
     adminTenants:[]
+  },
+  accountsdata:{
+    accounts:[]
   }
 }

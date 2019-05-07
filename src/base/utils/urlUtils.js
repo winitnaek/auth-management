@@ -1,7 +1,7 @@
-const svcpath = '/cfws/';
+const svcpath = '/sws/';
 const apiversion = 'v1';
 const apir = 'r/';
-const w2admws = '/EchoService';
+const w2admws = '/SecurityService';
 const apiprefix ='/api'
 class urlUtils {
   static buildURL(urlin) {

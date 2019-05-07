@@ -8,6 +8,10 @@ import * as manifest from '../build/_manifest';
 import * as c from './base/constants/IndexConstants';
 import {makeNavs,makeSearch} from './base/template/navGenerator';
 import AdminComponent from './app/admin/AdminComponent';
+import AccountsComponent from './app/accounts/AccountsComponent';
+import AuditLogsComponent from './app/auditlogs/AuditLogsComponent';
+import SSOConfigComponent from './app/ssoconfigs/SSOConfigComponent';
+import {getSyncInfo,getTenants}  from './app/admin/adminAction';
 let store = configureStore();
 
 //Temporary set user in session:======Comment this when deployed with MAC======
@@ -32,23 +36,45 @@ function renderSecAdmApplication(elem, renderName) {
     setAppAnchor(elem);
     setAppDataset(dataset);
     if(renderName==rname.RN_ADMINISTRATION){
-        //const element = <h1>Admin</h1>;
-        //ReactDOM.render(element, document.querySelector('#'+elem));
+        //ReactDOM.render(<Provider store={store}><Progress/></Provider>,document.querySelector('#'+elem));
+        store.dispatch(getSyncInfo()).then((result) => {
+         renderAdminData(elem);
+         //setTimeout(function() {    
+         //    renderAdminData(elem);
+         //}.bind(this), 200)
+        }).catch((error) => {
+             throw new SubmissionError({_error:  error });
+        });
+    }else if(renderName==rname.RN_ACCOUNTS){
         ReactDOM.render(
             <Provider store={store}>
-            <AdminComponent/>
+            <AccountsComponent/>
             </Provider>,
             document.querySelector('#'+elem));
-    }else if(renderName==rname.RN_ACCOUNTS){
-        const element = <h1>Accounts</h1>;
-        ReactDOM.render(element, document.querySelector('#'+elem));
     }else if(renderName==rname.RN_SSO_CONFIGS){
-        const element = <h1>Manage Configs</h1>;
-        ReactDOM.render(element, document.querySelector('#'+elem));
+        ReactDOM.render(
+            <Provider store={store}>
+            <SSOConfigComponent/>
+            </Provider>,
+            document.querySelector('#'+elem));
     }else if(renderName==rname.RN_AUDIT_LOGS){
-        const element = <h1>Audit Logs</h1>;
-        ReactDOM.render(element, document.querySelector('#'+elem));
+        ReactDOM.render(
+            <Provider store={store}>
+            <AuditLogsComponent/>
+            </Provider>,
+            document.querySelector('#'+elem));
     }
+}
+/**
+ * renderAdminData
+ * @param {*} elem 
+ */
+function renderAdminData(elem) {
+    ReactDOM.render(
+        <Provider store={store}>
+        <AdminComponent/>
+        </Provider>,
+        document.querySelector('#'+elem));
 }
 var APP_ANCHOR;
 function setAppAnchor(elem){
