@@ -31,6 +31,19 @@ class SSOConfigComponent extends React.Component {
         if(ssoconfigsdata){
             const removeMe = (id) => {
                 console.log(id);
+                var selectedrowindex = this.refs.manageConfigsGrid.getselectedrowindex();
+                console.log('selectedrowindex '+selectedrowindex);
+                var rowscount = this.refs.manageConfigsGrid.getdatainformation().rowscount;
+                console.log('rowscount '+rowscount);
+                if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                    var id = this.refs.manageConfigsGrid.getrowid(selectedrowindex);
+                    var commit = this.refs.manageConfigsGrid.deleterow(id);
+                    this.state.w2dgridata.splice(selectedrowindex,1);
+                    let enableAction=false;
+                    if(rowscount==1){
+                        enableAction = true;
+                    }
+                }
             }
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
             let columns =
@@ -40,12 +53,15 @@ class SSOConfigComponent extends React.Component {
             { text: 'Modify', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Modify'}</button></div></a>`;}
             },
-            { text: 'Delete', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return `<a href="#" title="${'Delete Me'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Delete Me'}</button></div></a>`;}
-            },
             { text: 'Test Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return `<a href="#" title="${'Test Config '+rowdata.configName}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Test '+rowdata.configName}</button></div></a>`;}
             },
+            { text: '        ', cellsalign: 'center', width: '70', align: 'center', datafield: 'Delete', columntype: 'button', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
+                return 'Delete';
+               }, buttonclick: function (id) {
+                   removeMe(id);
+               }
+            }
             ];
             return(
                 <div class="row h-100 justify-content-center align-items-center">
