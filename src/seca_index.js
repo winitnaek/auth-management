@@ -14,6 +14,7 @@ import SSOConfigComponent from './app/ssoconfigs/SSOConfigComponent';
 import {getSyncInfo,getTenants}  from './app/admin/adminAction';
 import {loadLinkConfig,loadUnLinkConfig}  from './app/accounts/accountsAction';
 import {getAuditLogs}  from './app/auditlogs/auditLogsAction';
+import {getSSOConfigsByTenant}  from './app/ssoconfigs/ssoConfigsAction';
 
 let store = configureStore();
 
@@ -56,13 +57,16 @@ function renderSecAdmApplication(elem, renderName) {
         }).catch((error) => {
             throw new SubmissionError({ _error: error });
         });
-        
     }else if(renderName==rname.RN_SSO_CONFIGS){
-        ReactDOM.render(
-            <Provider store={store}>
-            <SSOConfigComponent/>
-            </Provider>,
-            document.querySelector('#'+elem));
+        store.dispatch(getSSOConfigsByTenant()).then((result) => {
+            renderManageConfigsData(elem);
+            //setTimeout(function() {    
+            //    renderAdminData(elem);
+            //}.bind(this), 200)
+        }).catch((error) => {
+            throw new SubmissionError({ _error: error });
+        });
+           
     }else if(renderName==rname.RN_AUDIT_LOGS){
         store.dispatch(getAuditLogs(7)).then((result) => {
             renderAuditLogsData(elem);
@@ -74,6 +78,17 @@ function renderSecAdmApplication(elem, renderName) {
         });
         
     }
+}
+/**
+ * renderManageConfigsData
+ * @param {*} elem 
+ */
+function renderManageConfigsData(elem) {
+    ReactDOM.render(
+        <Provider store={store}>
+        <SSOConfigComponent/>
+        </Provider>,
+        document.querySelector('#'+elem));
 }
 /**
  * renderAuditLogsData

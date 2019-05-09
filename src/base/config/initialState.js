@@ -26,4 +26,7 @@ export default {
   auditlogsdata:{
     auditlogs:[]
   },
+  ssoconfigsdata:{
+    ssoconfigs:[]
+  }
 }

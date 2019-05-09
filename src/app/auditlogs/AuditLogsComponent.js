@@ -27,7 +27,7 @@ class AuditLogsComponent extends React.Component {
                 { name: 'entity', type: 'string' },
                 { name: 'message', type: 'string' }
             ],
-            pagesize: 5,
+            pagesize: 10,
             localdata:this.props.auditlogsdata
         };
         this.state = {

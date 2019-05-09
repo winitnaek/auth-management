@@ -5,6 +5,45 @@ import {generateAppErrorEvent} from '../../base/utils/AppErrorEvent';
  * adminAction
  * @author Vinit
  */
+export function getSSOConfigsByTenant() {
+    return function (dispatch, getState) {
+        const state = getState();
+        let data = [
+            {'accountId':'100', 'accountName':'IBM', 'configId':'conf1','configName':'Config IBM'},
+            {'accountId':'101', 'accountName':'Panera', 'configId':'conf2','configName':'Config Pan'},
+            {'accountId':'103', 'accountName':'Walmart', 'configId':'conf3','configName':'Config Wal'},
+            {'accountId':'104', 'accountName':'HBO', 'configId':'conf4','configName':'Config HBO'},
+            {'accountId':'105', 'accountName':'BSI', 'configId':'conf5','configName':'Config BSI'},
+            {'accountId':'106', 'accountName':'TestComp', 'configId':'conf6','configName':'Config Com'},
+            {'accountId':'107', 'accountName':'Microsoft', 'configId':'conf7','configName':'Config Msft'}];
+        let ssoconfigsdata = {
+            ssoconfigs:data
+        }
+        return new Promise((resolve, reject) => { 
+            dispatch(getSSOConfigsByTenantSuccess(ssoconfigsdata));  
+        setTimeout(() => resolve(ssoconfigsdata), 100); 
+        }); 
+        /*return ssoConfigAPI.getSSOConfigsByTenant().then(ssoconfigsdata => {
+            if(ssoconfigsdata){
+                if(ssoconfigsdata && ssoconfigsdata.syncdate){
+                    dispatch(getSSOConfigsByTenantSuccess(ssoconfigsdata));
+                }else if(ssoconfigsdata && ssoconfigsdata.message){
+                    dispatch(getSSOConfigsByTenantError(ssoconfigsdata));
+                }
+            }else{
+                throw ssoconfigsdata;
+            }
+        }).catch(error => {
+            generateAppErrorEvent(error.type,error.status,error.message,error);
+        });*/
+    };
+}
+export function getSSOConfigsByTenantSuccess(ssoconfigsdata) {
+    return { type: types.GET_SSOCONFIG_BYTENANTS_SUCCESS, ssoconfigsdata };
+}
+export function getSSOConfigsByTenantError(ssoconfigsdata) {
+    return { type: types.GET_SSOCONFIG_BYTENANTS_ERROR, ssoconfigsdata };
+}
 export function addSSOConfig() {
     return function (dispatch, getState) {
         const state = getState();
