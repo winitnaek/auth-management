@@ -6,8 +6,9 @@ import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {addSSOConfig}  from './ssoConfigsAction';
+import {addSSOConfig,loadModifyConfig}  from './ssoConfigsAction';
 import {divStylePA} from '../../base/constants/AppConstants';
+import AddSSOConfig from './AddSSOConfig';
 class SSOConfigComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -24,8 +25,37 @@ class SSOConfigComponent extends React.Component {
             localdata:this.props.ssoconfigsdata
         };
         this.state = {
-            source: source
+            source: source,
+            openAddSSOConfig:false,
+            addModifyTitle:''
         };
+        this.handleShowModifyConfig = this.handleShowModifyConfig.bind(this);
+        this.handleShowModifyConfigCancel = this.handleShowModifyConfigCancel.bind(this);
+    }
+    onAddAdminAccount() {
+        this.setState({openAddSSOConfig:true});
+     }
+     handleShowModifyConfigCancel() {
+         this.setState({openAddSSOConfig:false,addModifyTitle: 'Add Config'});
+     }
+     componentWillReceiveProps(nextProps) {
+        if (nextProps.modifydata && nextProps.modifydata.modify) {
+            var modifydata = {
+                modify: false,
+                configid:''
+            }
+            this.props.actions.loadModifyConfig(modifydata);
+            let data = this.refs.manageConfigsGrid.getrowdata(nextProps.modifydata.configid);
+            this.handleShowModifyConfig(data);
+        }
+    }
+    handleShowModifyConfig(rowdata) {        
+        this.setState({
+            openAddSSOConfig: true,
+            addModifyTitle: 'Modify Config'
+        })
+        console.log('rowdata');
+        console.log(rowdata);
     }
     renderSSOConfigUI(ssoconfigsdata){
         if(ssoconfigsdata){
@@ -51,7 +81,7 @@ class SSOConfigComponent extends React.Component {
             { text: 'Account', datafield: 'accountName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Config', datafield: 'configName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Modify', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Modify'}</button></div></a>`;}
+                return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onModifyConfig('${ndex}')}>${'Modify'}</button></div></a>`;}
             },
             { text: 'Test Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return `<a href="#" title="${'Test Config '+rowdata.configName}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Test '+rowdata.configName}</button></div></a>`;}
@@ -71,6 +101,7 @@ class SSOConfigComponent extends React.Component {
                         </Row>
                         <Row>
                         <Col>
+                        <Button color="secondary" size="sm" className="mb-2" onClick={() => this.onAddAdminAccount()}>Add Admin Account</Button>{' '}
                         <JqxGrid ref='manageConfigsGrid'
                             width={'100%'} source={dataAdapter} pageable={true} pagermode ={'simple'}
                             sortable={false} altrows={false} enabletooltips={false}
@@ -80,6 +111,7 @@ class SSOConfigComponent extends React.Component {
                         </Col>
                         </Row>
                     </Container>
+                    {this.state.openAddSSOConfig ? (<AddSSOConfig handleCancel={this.handleShowModifyConfigCancel}  showAddAccount={this.state.openAddSSOConfig} title={this.state.addModifyTitle}/>):null}
                 </div>
             );
         }else{
@@ -97,10 +129,11 @@ class SSOConfigComponent extends React.Component {
 };
 function mapStateToProps(state) {
     return {
-        ssoconfigsdata: state.ssoconfigsdata.ssoconfigs
+        ssoconfigsdata: state.ssoconfigsdata.ssoconfigs,
+        modifydata:state.modifydata
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({addSSOConfig}, dispatch) }
+    return { actions: bindActionCreators({addSSOConfig,loadModifyConfig}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(SSOConfigComponent);

@@ -14,7 +14,7 @@ import SSOConfigComponent from './app/ssoconfigs/SSOConfigComponent';
 import {getSyncInfo,getTenants}  from './app/admin/adminAction';
 import {loadLinkConfig,loadUnLinkConfig}  from './app/accounts/accountsAction';
 import {getAuditLogs}  from './app/auditlogs/auditLogsAction';
-import {getSSOConfigsByTenant}  from './app/ssoconfigs/ssoConfigsAction';
+import {getSSOConfigsByTenant,loadModifyConfig}  from './app/ssoconfigs/ssoConfigsAction';
 
 let store = configureStore();
 
@@ -152,7 +152,13 @@ function onUnLinkConfig(id){
     }
     store.dispatch(loadUnLinkConfig(unlinkdata));
 }
-
+function onModifyConfig(id) {
+    var modifydata = {
+        modify: true,
+        configid: id
+    }
+    store.dispatch(loadModifyConfig(modifydata));
+}
 const resolveTemplates = async () => {
     let response = await fetch('templates.html');
     let templates = await response.text();
@@ -256,6 +262,9 @@ window.onLinkConfig = onLinkConfig;
 
 module.exports = onUnLinkConfig;
 window.onUnLinkConfig = onUnLinkConfig;
+
+module.exports = onModifyConfig;
+window.onModifyConfig = onModifyConfig;
 
 let w2aIndex = {
     'resolveTemplates': resolveTemplates,

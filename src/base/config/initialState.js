@@ -28,5 +28,9 @@ export default {
   },
   ssoconfigsdata:{
     ssoconfigs:[]
+  },
+  modifydata:{
+    modify: false,
+    configid:''
   }
 }

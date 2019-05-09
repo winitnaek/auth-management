@@ -116,3 +116,6 @@ export function deleteSSOConfigSuccess(deleted) {
 export function deleteSSOConfigError(deleted) {
     return { type: types.DELETE_SSO_CONFIG_ERROR, deleted };
 }
+export function loadModifyConfig(modifydata){
+    return {type:types.LOAD_MODIFYCONFIG_DATA,modifydata};
+}

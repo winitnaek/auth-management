@@ -5,12 +5,15 @@ import linkReducer from '../../app/accounts/linkReducer';
 import unlinkReducer from '../../app/accounts/unlinkReducer';
 import auditLogsReducer from '../../app/auditlogs/auditLogsReducer';
 import ssoConfigsReducer from '../../app/ssoconfigs/ssoConfigsReducer';
+import modifyConfigReducer from '../../app/ssoconfigs/modifyConfigReducer';
+
 const rootReducer = combineReducers({ 
     admindata: adminReducer, 
     accountsdata: accountsReducer, 
     linkdata: linkReducer, 
     unlinkdata: unlinkReducer,
     auditlogsdata:auditLogsReducer,
-    ssoconfigsdata:ssoConfigsReducer
+    ssoconfigsdata:ssoConfigsReducer,
+    modifydata:modifyConfigReducer
 });
 export default rootReducer;
