@@ -8,6 +8,7 @@ import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
 import {linkSSOConfigToTenant,loadLinkConfig,loadUnLinkConfig}  from './accountsAction';
 import {divStylePA} from '../../base/constants/AppConstants';
+import LinkConfigToTenant from './LinkConfigToTenant';
 class AccountsComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -26,29 +27,41 @@ class AccountsComponent extends React.Component {
             localdata:this.props.accountsdata
         };
         this.state = {
-            source: source
+            source: source,
+            showLinkTenantToConfig:false
         };
+        this.handleShowLinkTenantToConfig = this.handleShowLinkTenantToConfig.bind(this);
+        this.handleTenantConfigCancel = this.handleTenantConfigCancel.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.linkdata && nextProps.linkdata.linked) {
-            //$('[data-toggle="tooltip"]').tooltip('hide');
             var linkdata = {
                 linked: false,
                 accountid:''
             }
             this.props.actions.loadLinkConfig(linkdata);
-            //let data = this.refs.eew2Grid.getrowdata(nextProps.w2data.eew2id);
-            //this.handleShowPDF(data);
+            let data = this.refs.accountsGrid.getrowdata(nextProps.linkdata.accountid);
+            this.handleShowLinkTenantToConfig(data);
         }else if(nextProps.unlinkdata && nextProps.unlinkdata.unlinked){
-            //$('[data-toggle="tooltip"]').tooltip('hide');
             var unlinkdata = {
                 unlinked: false,
                 accountid:''
               }
             this.props.actions.loadUnLinkConfig(unlinkdata);
-            //let data = this.refs.eew2Grid.getrowdata(nextProps.compdata.compid);
-            //this.handleShowMessages(data, null);
+            let data = this.refs.accountsGrid.getrowdata(nextProps.unlinkdata.accountid);
+            this.handleShowLinkTenantToConfig(data);
         }
+    }
+    handleTenantConfigCancel() {
+        this.setState({showLinkTenantToConfig:false});
+    }
+    handleShowLinkTenantToConfig(rowdata) {        
+        this.setState({
+            showLinkTenantToConfig: true,
+            title: ' W2 PDF'
+        })
+        console.log('rowdata');
+        console.log(rowdata);
     }
     renderAccountsUI(accounts){
         if(accounts){
@@ -92,6 +105,7 @@ class AccountsComponent extends React.Component {
                         </Col>
                         </Row>
                     </Container>
+                    {this.state.showLinkTenantToConfig ? (<LinkConfigToTenant handleCancel={this.handleTenantConfigCancel}  showLinkTenantToConfig={this.state.showLinkTenantToConfig} />) : null}
                 </div>
             );
         }else{
@@ -109,10 +123,12 @@ class AccountsComponent extends React.Component {
 };
 function mapStateToProps(state) {
     return {
-        accountsdata: state.accountsdata.accounts
+        accountsdata: state.accountsdata.accounts,
+        linkdata:state.linkdata,
+        unlinkdata:state.unlinkdata
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({linkSSOConfigToTenant,}, dispatch) }
+    return { actions: bindActionCreators({linkSSOConfigToTenant,loadLinkConfig,loadUnLinkConfig}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AccountsComponent);

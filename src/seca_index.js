@@ -13,6 +13,7 @@ import AuditLogsComponent from './app/auditlogs/AuditLogsComponent';
 import SSOConfigComponent from './app/ssoconfigs/SSOConfigComponent';
 import {getSyncInfo,getTenants}  from './app/admin/adminAction';
 import {loadLinkConfig,loadUnLinkConfig}  from './app/accounts/accountsAction';
+import {getAuditLogs}  from './app/auditlogs/auditLogsAction';
 
 let store = configureStore();
 
@@ -52,9 +53,9 @@ function renderSecAdmApplication(elem, renderName) {
             //setTimeout(function() {    
             //    renderAdminData(elem);
             //}.bind(this), 200)
-           }).catch((error) => {
-                throw new SubmissionError({_error:  error });
-           });
+        }).catch((error) => {
+            throw new SubmissionError({ _error: error });
+        });
         
     }else if(renderName==rname.RN_SSO_CONFIGS){
         ReactDOM.render(
@@ -63,12 +64,27 @@ function renderSecAdmApplication(elem, renderName) {
             </Provider>,
             document.querySelector('#'+elem));
     }else if(renderName==rname.RN_AUDIT_LOGS){
-        ReactDOM.render(
-            <Provider store={store}>
-            <AuditLogsComponent/>
-            </Provider>,
-            document.querySelector('#'+elem));
+        store.dispatch(getAuditLogs(7)).then((result) => {
+            renderAuditLogsData(elem);
+            //setTimeout(function() {    
+            //    renderAdminData(elem);
+            //}.bind(this), 200)
+        }).catch((error) => {
+            throw new SubmissionError({ _error: error });
+        });
+        
     }
+}
+/**
+ * renderAuditLogsData
+ * @param {*} elem 
+ */
+function renderAuditLogsData(elem) {
+    ReactDOM.render(
+        <Provider store={store}>
+        <AuditLogsComponent/>
+        </Provider>,
+        document.querySelector('#'+elem));
 }
 /**
  * renderAccountsData
@@ -109,14 +125,14 @@ function appDataset(){
 }
 function onLinkConfig(id) {
     var linkdata = {
-        linkdata: true,
+        linked: true,
         accountid: id
     }
     store.dispatch(loadLinkConfig(linkdata));
 }
 function onUnLinkConfig(id){
     var unlinkdata = {
-        unlinkdata: true,
+        unlinked: true,
         accountid: id
     }
     store.dispatch(loadUnLinkConfig(unlinkdata));

@@ -22,5 +22,8 @@ export default {
   unlinkdata: {
     unlinked: false,
     accountid:''
-  }
+  },
+  auditlogsdata:{
+    auditlogs:[]
+  },
 }
