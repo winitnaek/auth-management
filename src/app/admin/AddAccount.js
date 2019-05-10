@@ -53,16 +53,7 @@ class AddAccount extends React.Component {
                                 <Label sm={1}></Label>
                                 <Label sm={3}>Select Account</Label>
                                 <Col sm={6} style={{ zIndex: 100 }}>
-                                    <Select
-                                        name="selAccount"
-                                        value={this.state.selectedAccount}
-                                        onChange={this.handleAccountChange}
-                                        isSearchable={false}
-                                        isClearable={false}
-                                        isMulti={false}
-                                        options={this.state.accounts}
-                                        isLoading={this.state.isCompLoading}
-                                    />
+                                <Input type="text" name="account" id="account" placeholder="Enter Account" />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -78,14 +69,22 @@ class AddAccount extends React.Component {
                                         isMulti={false}
                                         options={this.state.products}
                                         isLoading={this.state.isProductLoading}
+                                        reset
                                     />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Label sm={1}></Label>
-                                <Label sm={3}>Dataset/Comp CID</Label>
+                                <Label sm={3}>Dataset</Label>
                                 <Col sm={6} style={{ zIndex: 80 }}>
-                                    <Input type="text" name="dataset" id="datasetcompcid" placeholder="Enter Dataset/Comp CID" />
+                                    <Input type="text" name="dataset" id="datasetcompcid" placeholder="Enter Dataset" />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Label sm={1}></Label>
+                                <Label sm={3}>Company CID</Label>
+                                <Col sm={6} style={{ zIndex: 80 }}>
+                                    <Input type="text" name="dataset" id="datasetcompcid" placeholder="Enter Company CID" />
                                 </Col>
                             </FormGroup>
                         </Form>
