@@ -176,16 +176,16 @@ export function deleteTenantError(deleted) {
 export function getTenants(includeImported) {
     return function (dispatch, getState) {
         const state = getState();
-        let data = [{'accountId':'100', 'accountName':'IBM', 'productName':'TPF','dataset':'Dataset IBM', 'isEnabled':true, 'configname':'IBM Staging'},{accountId:'101', accountName:'Panera', productName:'TF',dataset:'Dataset Pan','isEnabled':true, 'configname':''},{accountId:'102', accountName:'Dannys', productName:'CF',dataset:'Dataset Dan', 'isEnabled':true, 'configname':'Dannys prodconf'}];
+        /*let data = [{'accountId':'100', 'accountName':'IBM', 'productName':'TPF','dataset':'Dataset IBM', 'isEnabled':true, 'configname':'IBM Staging'},{accountId:'101', accountName:'Panera', productName:'TF',dataset:'Dataset Pan','isEnabled':true, 'configname':''},{accountId:'102', accountName:'Dannys', productName:'CF',dataset:'Dataset Dan', 'isEnabled':true, 'configname':'Dannys prodconf'}];
         let accountsdata = {
             accounts:data
         }
         return new Promise((resolve, reject) => { 
         dispatch(getTenantsSuccess(accountsdata));  
         setTimeout(() => resolve(accountsdata), 100); 
-        }); 
-    /*return function (dispatch, getState) {
-        const state = getState();
+        });
+        return function (dispatch, getState) {
+        const state = getState();*/ 
         return adminAPI.getTenants(includeImported).then(tenants => {
             if(tenants){
                 if(tenants && tenants.message){
@@ -198,11 +198,11 @@ export function getTenants(includeImported) {
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
-        });*/
+        });
     };
 }
 export function getTenantsSuccess(accountsdata) {
-    return { type: types.GET_TENANTS_SUCCESS, accountsdata };
+    return { type: types.GET_ADMINTENANT_SUCCESS, accountsdata };
 }
 export function getTenantsError(accountsdata) {
     return { type: types.GET_TENANTS_ERROR, accountsdata };
@@ -210,22 +210,19 @@ export function getTenantsError(accountsdata) {
 export function getSyncInfo() {
     return function (dispatch, getState) {
         const state = getState();
-
-        let data = [{'accountId':'100', 'accountName':'IBM', 'productName':'TPF','dataset':'Dataset IBM'},{accountId:'101', accountName:'Panera', productName:'TF',dataset:'Dataset Pan'},{accountId:'102', accountName:'Dannys', productName:'CF',dataset:'Dataset Dan'}];
         let  dt = new Date();
         let admindata = {
-            lastFullSyncDt:'04-30-2019 12:58:59',
-            lastSFSyncDt:dt.toString(),
-            lastTPFSyncDt:dt.toString(),
-            sfSyncEnabled:true,
-            tpfSyncEnabled:true,
-            adminTenants:data
+            lastFullSync:'04-30-2019 12:58:59',
+            lastPerFSync:'05-01-2019 12:58:59',
+            isPerSyncOn:true,
+            isSyncInProgress:false,
+            adminTenants:[]
           }
           return new Promise((resolve, reject) => { 
             dispatch(getSyncInfoSuccess(admindata));  
             setTimeout(() => resolve(admindata), 100); 
-          }); 
-        /*return adminAPI.getSyncInfo().then(syncInfo => {
+          });
+        return adminAPI.getSyncInfo().then(syncInfo => {
             if(syncInfo){
                 if(syncInfo && syncInfo.message){
                     dispatch(getSyncInfoError(syncInfo));
@@ -237,7 +234,7 @@ export function getSyncInfo() {
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
-        });*/
+        });
     };
 }
 export function getSyncInfoSuccess(admindata) {

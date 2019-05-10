@@ -3,23 +3,21 @@ import initialState from '../../base/config/initialState';
 
 export default function adminReducer(state = initialState.admindata, action) {
   switch(action.type) {
-    case types.GET_TENANTS: {
+    case types.GET_ADMINTENANT_SUCCESS: {
         return Object.assign({}, ...state, {
-            lastFullSyncDt: action.lastFullSyncDt,
-            lastSFSyncDt: action.lastSFSyncDt,
-            lastTPFSyncDt: action.lastTPFSyncDt,
-            sfSyncEnabled: action.sfSyncEnabled,
-            tpfSyncEnabled: action.tpfSyncEnabled,
-            adminTenants: Object.assign([], ...state.adminTenants, action.adminTenants),
+            lastFullSync:state.lastFullSync,
+            lastPerFSync:state.lastPerFSync,
+            isPerSyncOn:state.isPerSyncOn,
+            isSyncInProgress:state.isSyncInProgress,
+            adminTenants: Object.assign([], ...state.adminTenants, action.accountsdata),
         });
     }
     case types.GET_SYNC_INFO_SUCCESS: {
         return Object.assign({}, ...state, {
-            lastFullSyncDt: action.admindata.lastFullSyncDt,
-            lastSFSyncDt: action.admindata.lastSFSyncDt,
-            lastTPFSyncDt: action.admindata.lastTPFSyncDt,
-            sfSyncEnabled: action.admindata.sfSyncEnabled,
-            tpfSyncEnabled: action.admindata.tpfSyncEnabled,
+            lastFullSync:action.admindata.lastFullSync,
+            lastPerFSync:action.admindata.lastPerFSync,
+            isPerSyncOn:action.admindata.isPerSyncOn,
+            isSyncInProgress:action.admindata.isSyncInProgress,
             adminTenants: Object.assign([], ...state.adminTenants, action.admindata.adminTenants),
         });
     }

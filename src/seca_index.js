@@ -40,14 +40,19 @@ function renderSecAdmApplication(elem, renderName) {
     setAppAnchor(elem);
     setAppDataset(dataset);
     if(renderName==rname.RN_ADMINISTRATION){
-        store.dispatch(getSyncInfo()).then((result) => {
+        store.dispatch(getSyncInfo()).then(store.dispatch(getTenants(false))).then((result) => {
+            renderAdminData(elem);
+        }).catch((error) => {
+            throw new SubmissionError({_error:  error });
+        });
+       /*store.dispatch(getSyncInfo()).then((result) => {
          renderAdminData(elem);
          //setTimeout(function() {    
          //    renderAdminData(elem);
          //}.bind(this), 200)
         }).catch((error) => {
              throw new SubmissionError({_error:  error });
-        });
+        });*/
     }else if(renderName==rname.RN_ACCOUNTS){
         store.dispatch(getTenants(true)).then((result) => {
             renderAccountsData(elem);

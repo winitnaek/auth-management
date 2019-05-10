@@ -17,25 +17,25 @@ class AdminComponent extends React.Component {
         {
             datatype: "json",
             datafields: [
-                { name: 'accountId', type: 'string' },
-                { name: 'accountName', type: 'string' },
-                { name: 'productName', type: 'string' },
+                { name: 'id', type: 'string' },
+                { name: 'acctName', type: 'string' },
+                { name: 'prodName', type: 'string' },
                 { name: 'dataset', type: 'string' }
             ],
             pagesize: 5,
             localdata: this.props.admindata.adminTenants
         };
-        let sfSyncOnOffLabel  ='Periodic Sync Off';
-        let isSfSyncOnOff=false;
-        if(this.props.admindata.sfSyncEnabled){
-            isSfSyncOnOff =true;
-            sfSyncOnOffLabel='Periodic Sync On';
+        let perSyncOnOffLabel  ='Periodic Sync Off';
+        let isPerSyncOnOff=false;
+        if(this.props.admindata.isPerSyncOn){
+            isPerSyncOnOff =true;
+            perSyncOnOffLabel='Periodic Sync On';
         }
         this.state = {
             source: source,
             openAddAdminAccount:false,
-            sfSyncOnOffLabel:sfSyncOnOffLabel,
-            isSfSyncOnOff:isSfSyncOnOff
+            perSyncOnOffLabel:perSyncOnOffLabel,
+            isPerSyncOnOff:isPerSyncOnOff
         };
         this.onAddAdminAccount = this.onAddAdminAccount.bind(this);
         this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
@@ -50,10 +50,10 @@ class AdminComponent extends React.Component {
     sfSyncOnOffChanged(event){
         if(this.sfSyncOnOff.checked==true){
             console.log('checked');
-            this.setState({sfSyncOnOffLabel:'Periodic Sync On'});
+            this.setState({perSyncOnOffLabel:'Periodic Sync On'});
         }else{
             console.log('unchecked');
-            this.setState({sfSyncOnOffLabel:'Periodic Sync Off'});
+            this.setState({perSyncOnOffLabel:'Periodic Sync Off'});
         }
     }
     renderAdminUI(admindata){
@@ -75,12 +75,12 @@ class AdminComponent extends React.Component {
                 }
             }
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
-            var lastsfsyncdt = new Date(admindata.lastSFSyncDt);
+            var lastPerFSyncDt = new Date(admindata.lastPerFSync);
             
             let columns =
             [
-            { text: 'Account', datafield: 'accountName',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Product', datafield: 'productName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Account', datafield: 'acctName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Product', datafield: 'prodName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: '      ', cellsalign: 'center', width: '65', align: 'center', datafield: 'Delete', columntype: 'button', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return 'Delete';
@@ -105,7 +105,7 @@ class AdminComponent extends React.Component {
                                                 <Label sm={1}></Label>
                                                 <Label sm={4}>Last Full Sync Date/Time</Label>
                                                 <Col sm={3} className="p-2">
-                                                    <Label>{admindata.lastFullSyncDt}</Label>
+                                                    <Label>{admindata.lastFullSync}</Label>
                                                 </Col>
                                                 <Col sm={3}>
                                                     <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Re-Run Full Data Sync</Button>
@@ -130,12 +130,12 @@ class AdminComponent extends React.Component {
                                                 <Label sm={4}>Last Periodic Sync Date/Time</Label>
                                                 <Col sm={3}>
                                                     <JqxDateTimeInput ref='lastSFSyncDt' height={30} width={175} animationType={'fade'}
-                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastsfsyncdt}`} formatString="MM-dd-yyyy HH:mm:ss"/>
+                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastPerFSyncDt}`} formatString="MM-dd-yyyy HH:mm:ss"/>
                                                 </Col>
                                                 <Col sm={2}>
                                                     <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Sync Data</Button>
                                                 </Col>
-                                                <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.sfSyncOnOffChanged} defaultChecked={this.state.isSfSyncOnOff} name="sfSyncOnOff" label={this.state.sfSyncOnOffLabel} />
+                                                <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.sfSyncOnOffChanged} defaultChecked={this.state.isPerSyncOnOff} name="sfSyncOnOff" label={this.state.perSyncOnOffLabel} />
                                             </FormGroup>
                                         </Form>
                                     </CardBody>

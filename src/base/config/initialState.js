@@ -5,11 +5,10 @@ export default {
     userLoggedIn:''
   },
   admindata:{
-    lastFullSyncDt:'',
-    lastSFSyncDt:'',
-    lastTPFSyncDt:'',
-    sfSyncEnabled:'',
-    tpfSyncEnabled:'',
+    lastFullSync:'',
+    lastPerFSync:'',
+    isPerSyncOn:false,
+    isSyncInProgress:false,
     adminTenants:[]
   },
   accountsdata:{
