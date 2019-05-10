@@ -33,7 +33,7 @@ class SSOConfigComponent extends React.Component {
         this.handleShowModifyConfigCancel = this.handleShowModifyConfigCancel.bind(this);
     }
     onAddAdminAccount() {
-        this.setState({openAddSSOConfig:true});
+        this.setState({openAddSSOConfig:true,addModifyTitle:'Admin Config'});
      }
      handleShowModifyConfigCancel() {
          this.setState({openAddSSOConfig:false,addModifyTitle: 'Add Config'});
@@ -81,7 +81,7 @@ class SSOConfigComponent extends React.Component {
             { text: 'Account', datafield: 'accountName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Config', datafield: 'configName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Modify', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onModifyConfig('${ndex}')}>${'Modify'}</button></div></a>`;}
+                return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onModifyConfig('${ndex}')}>${'Modify '+rowdata.configName}</button></div></a>`;}
             },
             { text: 'Test Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return `<a href="#" title="${'Test Config '+rowdata.configName}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Test '+rowdata.configName}</button></div></a>`;}
@@ -101,7 +101,7 @@ class SSOConfigComponent extends React.Component {
                         </Row>
                         <Row>
                         <Col>
-                        <Button color="secondary" size="sm" className="mb-2" onClick={() => this.onAddAdminAccount()}>Add Admin Account</Button>{' '}
+                        <Button color="secondary" size="sm" className="mb-2" onClick={() => this.onAddAdminAccount()}>Add New Config</Button>{' '}
                         <JqxGrid ref='manageConfigsGrid'
                             width={'100%'} source={dataAdapter} pageable={true} pagermode ={'simple'}
                             sortable={false} altrows={false} enabletooltips={false}

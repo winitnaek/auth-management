@@ -148,7 +148,7 @@ class AdminComponent extends React.Component {
                         <Row>
                             <Col>
                                 <Card>
-                                    <CardHeader>Manage Admin Accounts</CardHeader>
+                                    <CardHeader>Manage Admin Dataset</CardHeader>
                                     <CardBody>
                                     <Button color="secondary" size="sm" className="mb-2" onClick={() => this.onAddAdminAccount()}>Add Admin Account</Button>{' '}
                                     <JqxGrid ref='adminAccountGrid'
