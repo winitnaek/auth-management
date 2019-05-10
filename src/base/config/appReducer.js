@@ -6,6 +6,7 @@ import unlinkReducer from '../../app/accounts/unlinkReducer';
 import auditLogsReducer from '../../app/auditlogs/auditLogsReducer';
 import ssoConfigsReducer from '../../app/ssoconfigs/ssoConfigsReducer';
 import modifyConfigReducer from '../../app/ssoconfigs/modifyConfigReducer';
+import testssoidpReducer from '../../app/ssoconfigs/testssoidpReducer';
 
 const rootReducer = combineReducers({ 
     admindata: adminReducer, 
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     unlinkdata: unlinkReducer,
     auditlogsdata:auditLogsReducer,
     ssoconfigsdata:ssoConfigsReducer,
-    modifydata:modifyConfigReducer
+    modifydata:modifyConfigReducer,
+    ssoidpdata:testssoidpReducer
 });
 export default rootReducer;

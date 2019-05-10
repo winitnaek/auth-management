@@ -27,9 +27,9 @@
     },{
         "id":"270a5c1f-14d3-4087-a196-d93a908b7cd4",
         "groupId":"Group1", 
-        "title": "Manage Config",
+        "title": "Manage SSO Config",
         "icon": "fas fa-table fa-sm",
-        "tooltip": "Manage Config",
+        "tooltip": "Manage SSO Config",
         "renderName": "ssoConfigs",
         "visible": true
     },{

@@ -119,3 +119,6 @@ export function deleteSSOConfigError(deleted) {
 export function loadModifyConfig(modifydata){
     return {type:types.LOAD_MODIFYCONFIG_DATA,modifydata};
 }
+export function loadTestSsoIdp(ssoidpdata){
+    return {type:types.LOAD_TESTSSOIDP_DATA,ssoidpdata};
+}

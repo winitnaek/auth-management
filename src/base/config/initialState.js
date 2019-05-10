@@ -32,5 +32,9 @@ export default {
   modifydata:{
     modify: false,
     configid:''
+  },
+  ssoidpdata:{
+    testssoidp: false,
+    ssoid:''
   }
 }
