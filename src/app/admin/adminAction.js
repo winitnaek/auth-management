@@ -178,17 +178,6 @@ export function getSyncInfo() {
     return function (dispatch, getState) {
         const state = getState();
         let  dt = new Date();
-        let admindata = {
-            lastFullSync:'04-30-2019 12:58:59',
-            lastPerFSync:'05-01-2019 12:58:59',
-            isPerSyncOn:true,
-            isSyncInProgress:false,
-            adminTenants:[]
-          }
-          return new Promise((resolve, reject) => { 
-            dispatch(getSyncInfoSuccess(admindata));  
-            setTimeout(() => resolve(admindata), 100); 
-          });
         return adminAPI.getSyncInfo().then(syncInfo => {
             if(syncInfo){
                 if(syncInfo && syncInfo.message){

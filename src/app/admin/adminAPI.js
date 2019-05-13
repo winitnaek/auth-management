@@ -98,9 +98,13 @@ class adminActionAPI {
         });
     }
     static deleteTenant(tendantId) {
-        let paramurl = `${'?tendantId='}${tendantId}`;
+        let paramurl = `${'?id='}${tendantId}`;
         var svcs_url = `${svcs.DELETE_TENANT}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
             credentials: 'same-origin'
         }).then(response => {
             if (response.ok) {

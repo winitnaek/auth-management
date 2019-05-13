@@ -7,9 +7,10 @@ import JqxDateTimeInput from '../../deps/jqwidgets-react/react_jqxdatetimeinput.
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {runFullSFSync,enablePeriodicDataSync}  from './adminAction';
+import {runFullSFSync,enablePeriodicDataSync,deleteTenant}  from './adminAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddAccount from './AddAccount';
+import AdminDatasetsGrid from './AdminDatasetsGrid';
 class AdminComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -60,38 +61,8 @@ class AdminComponent extends React.Component {
     }
     renderAdminUI(admindata){
         if(admindata){
-            const removeMe = (id) => {
-                console.log(id);
-                var selectedrowindex = this.refs.adminAccountGrid.getselectedrowindex();
-                console.log('selectedrowindex '+selectedrowindex);
-                var rowscount = this.refs.adminAccountGrid.getdatainformation().rowscount;
-                console.log('rowscount '+rowscount);
-                if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-                    var id = this.refs.adminAccountGrid.getrowid(selectedrowindex);
-                    var commit = this.refs.adminAccountGrid.deleterow(id);
-                    //this.state.adminAccountGrid.splice(selectedrowindex,1);
-                    let enableAction=false;
-                    if(rowscount==1){
-                        enableAction = true;
-                    }
-                }
-            }
-            let dataAdapter = new $.jqx.dataAdapter(this.state.source);
-            var lastPerFSyncDt = new Date(admindata.lastPerFSync);
-            
-            let columns =
-            [
-            { text: 'Account', datafield: 'acctName',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Product', datafield: 'prodName',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: '      ', cellsalign: 'center', width: '65', align: 'center', datafield: 'Delete', columntype: 'button', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return 'Delete';
-               }, buttonclick: function (id) {
-                   removeMe(id);
-               }
-            },
-            ];
-            return(
+           var lastPerFSyncDt = new Date(admindata.lastPerSync);
+           return(
                 <div class="row h-100 justify-content-center align-items-center">
                     <Container>
                         <Row>
@@ -147,22 +118,7 @@ class AdminComponent extends React.Component {
                         <Row>
                             <Label className="p-1"></Label>
                         </Row>
-                        <Row>
-                            <Col>
-                                <Card>
-                                    <CardHeader>Manage Admin Dataset</CardHeader>
-                                    <CardBody>
-                                    <Button color="secondary" size="sm" className="mb-2" onClick={() => this.onAddAdminAccount()}>Add Admin Dataset</Button>{' '}
-                                    <JqxGrid ref='adminAccountGrid'
-                                        width={'100%'} source={dataAdapter} pageable={true} pagermode ={'simple'}
-                                        sortable={false} altrows={false} enabletooltips={false}
-                                        autoheight={true} editable={false} columns={columns}
-                                        filterable={false} showfilterrow={false}
-                                        selectionmode={'multiplerowsextended'}/>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row>
+                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions}/>):null}
                     </Container>
                     {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel}  showAddAccount={this.state.openAddAdminAccount} />):null}
                 </div>
@@ -186,6 +142,6 @@ function mapStateToProps(state) {
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({runFullSFSync,enablePeriodicDataSync}, dispatch) }
+    return { actions: bindActionCreators({runFullSFSync,enablePeriodicDataSync,deleteTenant}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AdminComponent);
