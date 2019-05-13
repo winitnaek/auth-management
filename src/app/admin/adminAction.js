@@ -77,15 +77,15 @@ export function runTPFSyncSuccess(tpfsync) {
 export function runTPFSyncError(tpfsync) {
     return { type: types.TPF_SYNC_ERROR, tpfsync };
 }
-export function enableSFSync(enabled) {
+export function enablePeriodicDataSync(enabled) {
     return function (dispatch, getState) {
         const state = getState();
-        return adminAPI.enableSFSync(enabled).then(enabled => {
+        return adminAPI.enablePeriodicDataSync(enabled).then(enabled => {
             if(enabled){
                 if(enabled && enabled.message){
-                    dispatch(enableSFSyncError(enabled));
+                    dispatch(enablePeriodicDataSyncError(enabled));
                 }else if(enabled){
-                    dispatch(enableSFSyncSuccess(enabled));
+                    dispatch(enablePeriodicDataSyncSuccess(enabled));
                 }
             }else{
                 throw enabled;
@@ -95,36 +95,13 @@ export function enableSFSync(enabled) {
         });
     };
 }
-export function enableSFSyncSuccess(enabled) {
-    return { type: types.TPF_SYNC_SUCCESS, enabled };
+export function enablePeriodicDataSyncSuccess(enabled) {
+    return { type: types.ENABLE_PERSYNC_SUCCESS, enabled };
 }
-export function enableSFSyncError(enabled) {
-    return { type: types.TPF_SYNC_ERROR, enabled };
+export function enablePeriodicDataSyncError(enabled) {
+    return { type: types.ENABLE_PERSYNC_ERROR, enabled };
 }
-export function enableTPFSync(enabled) {
-    return function (dispatch, getState) {
-        const state = getState();
-        return adminAPI.enableTPFSync(enabled).then(enabled => {
-            if(enabled){
-                if(enabled && enabled.message){
-                    dispatch(enableTPFSyncError(enabled));
-                }else if(enabled){
-                    dispatch(enableTPFSyncSuccess(enabled));
-                }
-            }else{
-                throw enabled;
-            }
-        }).catch(error => {
-            generateAppErrorEvent(error.type,error.status,error.message,error);
-        });
-    };
-}
-export function enableTPFSyncSuccess(enabled) {
-    return { type: types.ENABLE_TPF_SYNC_SUCCESS, enabled };
-}
-export function enableTPFSyncError(enabled) {
-    return { type: types.ENABLE_TPF_SYNC_ERROR, enabled };
-}
+
 export function addTenant(accountName, productName, datasetName) {
     return function (dispatch, getState) {
         const state = getState();
@@ -173,25 +150,15 @@ export function deleteTenantSuccess(deleted) {
 export function deleteTenantError(deleted) {
     return { type: types.DELETED_TENENT_ERROR, deleted };
 }
-export function getTenants(includeImported) {
+export function getAdminTenants(includeImported) {
     return function (dispatch, getState) {
         const state = getState();
-        /*let data = [{'accountId':'100', 'accountName':'IBM', 'productName':'TPF','dataset':'Dataset IBM', 'isEnabled':true, 'configname':'IBM Staging'},{accountId:'101', accountName:'Panera', productName:'TF',dataset:'Dataset Pan','isEnabled':true, 'configname':''},{accountId:'102', accountName:'Dannys', productName:'CF',dataset:'Dataset Dan', 'isEnabled':true, 'configname':'Dannys prodconf'}];
-        let accountsdata = {
-            accounts:data
-        }
-        return new Promise((resolve, reject) => { 
-        dispatch(getTenantsSuccess(accountsdata));  
-        setTimeout(() => resolve(accountsdata), 100); 
-        });
-        return function (dispatch, getState) {
-        const state = getState();*/ 
         return adminAPI.getTenants(includeImported).then(tenants => {
             if(tenants){
                 if(tenants && tenants.message){
-                    dispatch(getTenantsError(tenants));
+                    dispatch(getAdminTenantsError(tenants));
                 }else if(tenants){
-                    dispatch(getTenantsSuccess(tenants));
+                    dispatch(getAdminTenantsSuccess(tenants));
                 }
             }else{
                 throw tenants;
@@ -201,11 +168,11 @@ export function getTenants(includeImported) {
         });
     };
 }
-export function getTenantsSuccess(accountsdata) {
-    return { type: types.GET_ADMINTENANT_SUCCESS, accountsdata };
+export function getAdminTenantsSuccess(adminTenants) {
+    return { type: types.GET_ADMINTENANT_SUCCESS, adminTenants };
 }
-export function getTenantsError(accountsdata) {
-    return { type: types.GET_TENANTS_ERROR, accountsdata };
+export function getAdminTenantsError(adminTenants) {
+    return { type: types.GET_ADMINTENANT_ERROR, adminTenants };
 }
 export function getSyncInfo() {
     return function (dispatch, getState) {

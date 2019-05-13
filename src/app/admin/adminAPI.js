@@ -57,39 +57,28 @@ class adminActionAPI {
             return error;
         });
     }
-    static enableSFSync(enabled) {
+    static enablePeriodicDataSync(enabled) {
         let paramurl = `${'?enabled='}${enabled}`;
         var svcs_url = `${svcs.ENABLED_SF_SYNC}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
             credentials: 'same-origin'
-        }).then(response => {
-            if (response.ok) {
+          })
+            .then(response => {
+              if(response.ok){
                 return response.json();
-            } else {
-                var errorCode = response.status;
-                var errorMsg = 'Unable to Enable SF Sync. ' + ADMIN_ERROR_MSG;
+              }else{
+                var errorCode =  response.status;
+                var errorMsg  =  'Unable to Enable Periodic Sync.'+ADMIN_ERROR_MSG;
                 return new AppError(errorMsg, errorCode);
-            }
-        }).catch(error => {
-            return error;
-        });
-    }
-    static enableTPFSync(enabled) {
-        let paramurl = `${'?enabled='}${enabled}`;
-        var svcs_url = `${svcs.ADD_TENANT}${paramurl}`;
-        return fetch(URLUtils.buildURL(svcs_url), {
-            credentials: 'same-origin'
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                var errorCode = response.status;
-                var errorMsg = 'Unable to Enable TPF Sync. ' + ADMIN_ERROR_MSG;
-                return new AppError(errorMsg, errorCode);
-            }
-        }).catch(error => {
-            return error;
-        });
+              } 
+            })
+            .catch(error => {
+              return error;
+            });
     }
     static addTenant(accountName, productName, datasetName) {
         let paramurl = `${'?accountName='}${accountName}${'&productName='}${productName}${'&datasetName='}${datasetName}`;

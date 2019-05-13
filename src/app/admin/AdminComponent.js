@@ -7,7 +7,7 @@ import JqxDateTimeInput from '../../deps/jqwidgets-react/react_jqxdatetimeinput.
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {runFullSFSync}  from './adminAction';
+import {runFullSFSync,enablePeriodicDataSync}  from './adminAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddAccount from './AddAccount';
 class AdminComponent extends React.Component {
@@ -39,7 +39,7 @@ class AdminComponent extends React.Component {
         };
         this.onAddAdminAccount = this.onAddAdminAccount.bind(this);
         this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
-        this.sfSyncOnOffChanged = this.sfSyncOnOffChanged.bind(this);
+        this.perSyncOnOffChanged = this.perSyncOnOffChanged.bind(this);
     }
     onAddAdminAccount() {
        this.setState({openAddAdminAccount:true});
@@ -47,11 +47,13 @@ class AdminComponent extends React.Component {
     handleAddAccountCancel() {
         this.setState({openAddAdminAccount:false});
     }
-    sfSyncOnOffChanged(event){
+    perSyncOnOffChanged(event){
         if(this.sfSyncOnOff.checked==true){
+            this.props.actions.enablePeriodicDataSync(true);
             console.log('checked');
             this.setState({perSyncOnOffLabel:'Periodic Sync On'});
         }else{
+            this.props.actions.enablePeriodicDataSync(false);
             console.log('unchecked');
             this.setState({perSyncOnOffLabel:'Periodic Sync Off'});
         }
@@ -67,7 +69,7 @@ class AdminComponent extends React.Component {
                 if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
                     var id = this.refs.adminAccountGrid.getrowid(selectedrowindex);
                     var commit = this.refs.adminAccountGrid.deleterow(id);
-                    this.state.w2dgridata.splice(selectedrowindex,1);
+                    //this.state.adminAccountGrid.splice(selectedrowindex,1);
                     let enableAction=false;
                     if(rowscount==1){
                         enableAction = true;
@@ -135,7 +137,7 @@ class AdminComponent extends React.Component {
                                                 <Col sm={2}>
                                                     <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Sync Data</Button>
                                                 </Col>
-                                                <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.sfSyncOnOffChanged} defaultChecked={this.state.isPerSyncOnOff} name="sfSyncOnOff" label={this.state.perSyncOnOffLabel} />
+                                                <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.perSyncOnOffChanged} defaultChecked={this.state.isPerSyncOnOff} name="sfSyncOnOff" label={this.state.perSyncOnOffLabel} />
                                             </FormGroup>
                                         </Form>
                                     </CardBody>
@@ -184,6 +186,6 @@ function mapStateToProps(state) {
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({runFullSFSync}, dispatch) }
+    return { actions: bindActionCreators({runFullSFSync,enablePeriodicDataSync}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AdminComponent);

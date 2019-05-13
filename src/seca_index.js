@@ -11,8 +11,8 @@ import AdminComponent from './app/admin/AdminComponent';
 import AccountsComponent from './app/accounts/AccountsComponent';
 import AuditLogsComponent from './app/auditlogs/AuditLogsComponent';
 import SSOConfigComponent from './app/ssoconfigs/SSOConfigComponent';
-import {getSyncInfo,getTenants}  from './app/admin/adminAction';
-import {loadLinkConfig,loadUnLinkConfig}  from './app/accounts/accountsAction';
+import {getSyncInfo,getAdminTenants}  from './app/admin/adminAction';
+import {loadLinkConfig,loadUnLinkConfig,getTenantAccounts}  from './app/accounts/accountsAction';
 import {getAuditLogs}  from './app/auditlogs/auditLogsAction';
 import {getSSOConfigsByTenant,loadModifyConfig,loadTestSsoIdp}  from './app/ssoconfigs/ssoConfigsAction';
 
@@ -40,7 +40,7 @@ function renderSecAdmApplication(elem, renderName) {
     setAppAnchor(elem);
     setAppDataset(dataset);
     if(renderName==rname.RN_ADMINISTRATION){
-        store.dispatch(getSyncInfo()).then(store.dispatch(getTenants(false))).then((result) => {
+        store.dispatch(getSyncInfo()).then(store.dispatch(getAdminTenants(false))).then((result) => {
             renderAdminData(elem);
         }).catch((error) => {
             throw new SubmissionError({_error:  error });
@@ -54,7 +54,7 @@ function renderSecAdmApplication(elem, renderName) {
              throw new SubmissionError({_error:  error });
         });*/
     }else if(renderName==rname.RN_ACCOUNTS){
-        store.dispatch(getTenants(true)).then((result) => {
+        store.dispatch(getTenantAccounts(true)).then((result) => {
             renderAccountsData(elem);
             //setTimeout(function() {    
             //    renderAdminData(elem);

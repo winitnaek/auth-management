@@ -9,7 +9,7 @@ export default function adminReducer(state = initialState.admindata, action) {
             lastPerFSync:state.lastPerFSync,
             isPerSyncOn:state.isPerSyncOn,
             isSyncInProgress:state.isSyncInProgress,
-            adminTenants: Object.assign([], ...state.adminTenants, action.accountsdata),
+            adminTenants: Object.assign([], ...state.adminTenants, action.adminTenants),
         });
     }
     case types.GET_SYNC_INFO_SUCCESS: {
@@ -19,6 +19,15 @@ export default function adminReducer(state = initialState.admindata, action) {
             isPerSyncOn:action.admindata.isPerSyncOn,
             isSyncInProgress:action.admindata.isSyncInProgress,
             adminTenants: Object.assign([], ...state.adminTenants, action.admindata.adminTenants),
+        });
+    }
+    case types.ENABLE_PERSYNC_SUCCESS: {
+        return Object.assign({}, ...state, {
+            lastFullSync:state.lastFullSync,
+            lastPerFSync:state.lastPerFSync,
+            isPerSyncOn:action.enabled,
+            isSyncInProgress:state.isSyncInProgress,
+            adminTenants: state.adminTenants.accountsdata
         });
     }
     default: 

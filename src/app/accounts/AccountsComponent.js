@@ -16,9 +16,9 @@ class AccountsComponent extends React.Component {
         {
             datatype: "json",
             datafields: [
-                { name: 'accountId', type: 'string' },
-                { name: 'accountName', type: 'string' },
-                { name: 'productName', type: 'string' },
+                { name: 'id', type: 'string' },
+                { name: 'acctName', type: 'string' },
+                { name: 'prodName', type: 'string' },
                 { name: 'dataset', type: 'string' },
                 { name: 'isEnabled', type: 'boolean' },
                 { name: 'configname', type: 'string' }
@@ -71,12 +71,12 @@ class AccountsComponent extends React.Component {
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
             let columns =
             [
-            { text: 'Account', datafield: 'accountName',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Product', datafield: 'productName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Account', datafield: 'acctName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Product', datafield: 'prodName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Enabled', datafield: 'isEnabled',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Attached Config', datafield: 'configname',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Config', cellsalign: 'center', align: 'center', datafield: 'Delete', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
+            { text: 'Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 if(rowdata.configname){
                     return `<a href="#" title="${'Un-Link'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem;" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Un-Link'}</button></div></a>`;
                 }else{
@@ -123,7 +123,7 @@ class AccountsComponent extends React.Component {
 };
 function mapStateToProps(state) {
     return {
-        accountsdata: state.accountsdata.accounts,
+        accountsdata: state.accountsdata,
         linkdata:state.linkdata,
         unlinkdata:state.unlinkdata
     }
