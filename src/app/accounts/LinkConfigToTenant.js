@@ -5,15 +5,19 @@ class LinkConfigToTenant extends React.Component {
     constructor(props) {
         super(props);
         let accounts =[];
-        accounts.push({'value':'IBM','label':'IBM'},{'value':'Panera','label':'Panera'},{'value':'Dannys','label':'Dannys'});
+       
         let tenentconfigs =[];
-        tenentconfigs.push({'value':'conf1','label':'Test Config1'},{'value':'conf2','label':'Test Config2'},{'value':'conf2','label':'Test Config3'});
+
+        this.props.ssoconfigs.forEach(function (item) {
+            tenentconfigs.push({'value':item.id,'label':item.dsplName});
+        })
         this.state = {
             showLinkTenantToConfig: this.props.showLinkTenantToConfig,
             accounts:accounts,
             tenentconfigs:tenentconfigs,
             selectedAccount:'',
-            selectedConfig:''
+            selectedConfig:'',
+            linkrow:this.props.linkrow
         };
         this.toggleUIConfirmOk = this.toggleUIConfirmOk.bind(this);
         this.toggleUIConfirmCancel = this.toggleUIConfirmCancel.bind(this);
@@ -36,8 +40,8 @@ class LinkConfigToTenant extends React.Component {
         console.log('tenentconfig');
         console.log(tenentconfig);
     }
-    toggleUIConfirmOk() {
-        this.props.handleOk();
+    toggleUIConfirmOk(selectedConfig) {
+        this.props.handleSave(selectedConfig);
     }
     toggleUIConfirmCancel() {
         this.props.handleCancel();
@@ -51,18 +55,9 @@ class LinkConfigToTenant extends React.Component {
                         <Form>
                             <FormGroup row>
                                 <Label sm={1}></Label>
-                                <Label sm={3}>Select Account</Label>
-                                <Col sm={6} style={{ zIndex: 100 }}>
-                                    <Select
-                                        name="selAccount"
-                                        value={this.state.selectedAccount}
-                                        onChange={this.handleAccountChange}
-                                        isSearchable={false}
-                                        isClearable={false}
-                                        isMulti={false}
-                                        options={this.state.accounts}
-                                        isLoading={this.state.isCompLoading}
-                                    />
+                                <Label sm={3}>Selected Account</Label>
+                                <Col sm={6}>
+                                <Label sm={3} style={{paddingLeft:0}}>{this.state.linkrow.acctName}</Label>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -85,7 +80,7 @@ class LinkConfigToTenant extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" className="btn btn-primary mr-auto" onClick={this.toggleUIConfirmCancel}>Cancel</Button>
-                        <Button onClick={() => this.onPerformAction(4)} color="success">Save</Button>{' '}
+                        <Button onClick={() => this.toggleUIConfirmOk(this.state.selectedConfig)} color="success">Save</Button>{' '}
                     </ModalFooter>
                 </Modal>
             </div>

@@ -11,6 +11,10 @@ class accountsAPI {
         let paramurl = `${'?accountName='}${accountName}${'&ssoConfigId='}${ssoConfigId}${'&toUnlink='}${toUnlink}`;
         var svcs_url = `${svcs.LINK_SSOCONFIG_TO_TENANT}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
             credentials: 'same-origin'
         }).then(response => {
             if (response.ok) {
@@ -35,6 +39,22 @@ class accountsAPI {
             } else {
                 var errorCode = response.status;
                 var errorMsg = 'Unable to Test SSO Configuration. ' + ADMIN_ERROR_MSG;
+                return new AppError(errorMsg, errorCode);
+            }
+        }).catch(error => {
+            return error;
+        });
+    }
+    static getSSOConfigs() {
+        var svcs_url = `${svcs.GET_SSOCONFIGS}`;
+        return fetch(URLUtils.buildURL(svcs_url), {
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                var errorCode = response.status;
+                var errorMsg = 'Unable to Get SSO Configurations. ' + ADMIN_ERROR_MSG;
                 return new AppError(errorMsg, errorCode);
             }
         }).catch(error => {

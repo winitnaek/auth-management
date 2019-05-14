@@ -15,4 +15,5 @@ export const TEST_SSO_CONFIGURATION ='/testSSOConfiguration';
 export const GET_TENANTS ='/getTenants';
 export const GET_SYNCINFO ='/getLastSyncInfo';
 export const GET_PRODUCT_BY_TENANTS ='/getProductsByTenants';
+export const GET_SSOCONFIGS ='/getSSOConfigs';
 
