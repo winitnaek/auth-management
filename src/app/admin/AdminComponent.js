@@ -7,10 +7,11 @@ import JqxDateTimeInput from '../../deps/jqwidgets-react/react_jqxdatetimeinput.
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {runFullSFSync,enablePeriodicDataSync,deleteTenant}  from './adminAction';
+import {runFullSFSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}  from './adminAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddAccount from './AddAccount';
 import AdminDatasetsGrid from './AdminDatasetsGrid';
+const PRINTGEN_TIMER =10000;
 class AdminComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -36,12 +37,38 @@ class AdminComponent extends React.Component {
             source: source,
             openAddAdminAccount:false,
             perSyncOnOffLabel:perSyncOnOffLabel,
-            isPerSyncOnOff:isPerSyncOnOff
+            isPerSyncOnOff:isPerSyncOnOff,
+            dsyncbtn:false
         };
       
         this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
         this.perSyncOnOffChanged = this.perSyncOnOffChanged.bind(this);
         this.openAddAcct = this.openAddAcct.bind(this);
+        this.handleSyncInProgress = this.handleSyncInProgress.bind(this);
+        this.handleSyncInProgress();
+        this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), PRINTGEN_TIMER);
+    }
+    handleSyncInProgress(){
+        this.props.actions.getSyncInfo().then(response => {
+            if(this.props.admindata && this.props.admindata.message){
+                this.setState({dsyncbtn:false});
+                console.log('Error Occured In Sync handleSyncInProgress');
+                clearInterval(this.syncinterval);
+                console.log('Sync interval is cleared.');
+            }else if(this.props.admindata.isSyncInProgress===true){
+                this.setState({dsyncbtn:true});
+                console.log('Sync Process is In-Progress');
+            }else if(this.props.admindata.isSyncInProgress===false){
+                this.setState({dsyncbtn:false});
+                console.log('Sync Process is not In-Progress');
+            }
+            return response
+        }).catch(error => {
+            console.log('Error Occured In Sync handleSyncInProgress In side cache error');
+            clearInterval(this.syncinterval);
+            console.log('Sync interval is cleared.');
+            console.log(error);
+        });
     }
     openAddAcct() {
         this.setState({openAddAdminAccount:true});
@@ -67,6 +94,13 @@ class AdminComponent extends React.Component {
            return(
                 <div class="row h-100 justify-content-center align-items-center">
                     <Container>
+                        {this.props.admindata && this.props.admindata.isSyncInProgress ? (
+                        <Row>
+                        <Col><Alert color="success" isOpen={this.props.admindata.isSyncInProgress===true}>
+                            <span href="#" id="inProgressSpinner"> <i class="fas fa-spinner fa-spin"></i> Data Sync is in progress.</span>
+                        </Alert></Col>
+                        </Row>
+                        ):null}
                         <Row>
                             <Col className="p-3"><h3 class="text-bsi">Admin</h3></Col>
                         </Row>
@@ -83,7 +117,7 @@ class AdminComponent extends React.Component {
                                                     <Label>{admindata.lastFullSync}</Label>
                                                 </Col>
                                                 <Col sm={3}>
-                                                    <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Re-Run Full Data Sync</Button>
+                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.toggle}>Re-Run Full Data Sync</Button>
                                                 </Col>
                                             </FormGroup>
                                         </Form>
@@ -108,7 +142,7 @@ class AdminComponent extends React.Component {
                                                         dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastPerFSyncDt}`} formatString="MM-dd-yyyy HH:mm:ss"/>
                                                 </Col>
                                                 <Col sm={2}>
-                                                    <Button color="primary" size="sm" className="btn btn-primary" onClick={this.toggle}>Sync Data</Button>
+                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.toggle}>Sync Data</Button>
                                                 </Col>
                                                 <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.perSyncOnOffChanged} defaultChecked={this.state.isPerSyncOnOff} name="sfSyncOnOff" label={this.state.perSyncOnOffLabel} />
                                             </FormGroup>
@@ -144,6 +178,6 @@ function mapStateToProps(state) {
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({runFullSFSync,enablePeriodicDataSync,deleteTenant}, dispatch) }
+    return { actions: bindActionCreators({runFullSFSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AdminComponent);
