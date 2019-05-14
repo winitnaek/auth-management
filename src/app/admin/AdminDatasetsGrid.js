@@ -22,8 +22,11 @@ class AdminDatasetsGrid extends React.Component {
             source: source,
             deleted:false
         };
+        this.onAddAdminAccount = this.onAddAdminAccount.bind(this);
     }
-
+    onAddAdminAccount() {
+        this.props.openAddAcct();
+     }
     render() {
         let dataAdapter = new $.jqx.dataAdapter(this.state.source);
         const removeMe = (id) => {

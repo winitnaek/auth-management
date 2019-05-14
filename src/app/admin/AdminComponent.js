@@ -38,13 +38,15 @@ class AdminComponent extends React.Component {
             perSyncOnOffLabel:perSyncOnOffLabel,
             isPerSyncOnOff:isPerSyncOnOff
         };
-        this.onAddAdminAccount = this.onAddAdminAccount.bind(this);
+      
         this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
         this.perSyncOnOffChanged = this.perSyncOnOffChanged.bind(this);
+        this.openAddAcct = this.openAddAcct.bind(this);
     }
-    onAddAdminAccount() {
-       this.setState({openAddAdminAccount:true});
+    openAddAcct() {
+        this.setState({openAddAdminAccount:true});
     }
+    
     handleAddAccountCancel() {
         this.setState({openAddAdminAccount:false});
     }
@@ -118,7 +120,7 @@ class AdminComponent extends React.Component {
                         <Row>
                             <Label className="p-1"></Label>
                         </Row>
-                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions}/>):null}
+                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions} openAddAcct={this.openAddAcct}/>):null}
                     </Container>
                     {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel}  showAddAccount={this.state.openAddAdminAccount} />):null}
                 </div>
