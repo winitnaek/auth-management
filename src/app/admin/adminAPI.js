@@ -7,50 +7,41 @@ import { ADMIN_ERROR_MSG } from '../../base/utils/AppErrorEvent';
  * @author Vinit
  */
 class adminActionAPI {
-    static runFullSFSync() {
-        var svcs_url = `${svcs.RUN_FULL_SF_SYNC}`;
+    static runInitialDataSync() {
+        var svcs_url = `${svcs.RUN_INITIALDATA_SYNC}`;
         return fetch(URLUtils.buildURL(svcs_url), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
             credentials: 'same-origin'
         }).then(response => {
             if (response.ok) {
                 return response.json();
             } else {
                 var errorCode = response.status;
-                var errorMsg = 'Unable to Run Full SF Sync. ' + ADMIN_ERROR_MSG;
+                var errorMsg = 'Unable to Run Initial Data Sync. ' + ADMIN_ERROR_MSG;
                 return new AppError(errorMsg, errorCode);
             }
         }).catch(error => {
             return error;
         });
     }
-    static runSFSync(fromDateTime) {
+    static runPeriodicDataSync(fromDateTime) {
         let paramurl = `${'?fromDateTime='}${fromDateTime}`;
-        var svcs_url = `${svcs.RUN_SF_SYNC}${paramurl}`;
+        var svcs_url = `${svcs.RUN_PERIODIC_SYNC}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
             credentials: 'same-origin'
         }).then(response => {
             if (response.ok) {
                 return response.json();
             } else {
                 var errorCode = response.status;
-                var errorMsg = 'Unable to Run SF Sync. ' + ADMIN_ERROR_MSG;
-                return new AppError(errorMsg, errorCode);
-            }
-        }).catch(error => {
-            return error;
-        });
-    }
-    static runTPFSync(fromDateTime) {
-        let paramurl = `${'?fromDateTime='}${fromDateTime}`;
-        var svcs_url = `${svcs.RUN_TPF_SYNC}${paramurl}`;
-        return fetch(URLUtils.buildURL(svcs_url), {
-            credentials: 'same-origin'
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                var errorCode = response.status;
-                var errorMsg = 'Unable to Run TPF Sync. ' + ADMIN_ERROR_MSG;
+                var errorMsg = 'Unable to Run Periodic Data Sync. ' + ADMIN_ERROR_MSG;
                 return new AppError(errorMsg, errorCode);
             }
         }).catch(error => {

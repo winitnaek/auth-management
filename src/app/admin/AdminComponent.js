@@ -7,11 +7,11 @@ import JqxDateTimeInput from '../../deps/jqwidgets-react/react_jqxdatetimeinput.
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {runFullSFSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}  from './adminAction';
+import {runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}  from './adminAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddAccount from './AddAccount';
 import AdminDatasetsGrid from './AdminDatasetsGrid';
-const PRINTGEN_TIMER =10000;
+const SYNCINFO_TIMER =10000;
 class AdminComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -45,8 +45,18 @@ class AdminComponent extends React.Component {
         this.perSyncOnOffChanged = this.perSyncOnOffChanged.bind(this);
         this.openAddAcct = this.openAddAcct.bind(this);
         this.handleSyncInProgress = this.handleSyncInProgress.bind(this);
+        this.runInitialDataSyncProc = this.runInitialDataSyncProc.bind(this);
+        this.runPeriodicDataSyncProc = this.runPeriodicDataSyncProc.bind(this);
         this.handleSyncInProgress();
-        this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), PRINTGEN_TIMER);
+        this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), SYNCINFO_TIMER);
+    }
+    runPeriodicDataSyncProc(){
+        this.props.actions.runPeriodicDataSync(this.refs.lastPerSyncDt.val());
+        this.setState({dsyncbtn:true});
+    }
+    runInitialDataSyncProc(){
+        this.props.actions.runInitialDataSync();
+        this.setState({dsyncbtn:true});
     }
     handleSyncInProgress(){
         this.props.actions.getSyncInfo().then(response => {
@@ -90,7 +100,7 @@ class AdminComponent extends React.Component {
     }
     renderAdminUI(admindata){
         if(admindata){
-           var lastPerFSyncDt = new Date(admindata.lastPerSync);
+           var lastPerSyncDt = new Date(this.props.admindata.lastPerSync);
            return(
                 <div class="row h-100 justify-content-center align-items-center">
                     <Container>
@@ -117,7 +127,7 @@ class AdminComponent extends React.Component {
                                                     <Label>{admindata.lastFullSync}</Label>
                                                 </Col>
                                                 <Col sm={3}>
-                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.toggle}>Re-Run Full Data Sync</Button>
+                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.runInitialDataSyncProc}>Re-Run Full Data Sync</Button>
                                                 </Col>
                                             </FormGroup>
                                         </Form>
@@ -138,11 +148,11 @@ class AdminComponent extends React.Component {
                                                 <Label sm={1}></Label>
                                                 <Label sm={4}>Last Periodic Sync Date/Time</Label>
                                                 <Col sm={3}>
-                                                    <JqxDateTimeInput ref='lastSFSyncDt' height={30} width={175} animationType={'fade'}
-                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastPerFSyncDt}`} formatString="MM-dd-yyyy HH:mm:ss"/>
+                                                    <JqxDateTimeInput ref='lastPerSyncDt' height={30} width={175} animationType={'fade'}
+                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastPerSyncDt}`} formatString="yyyy-MM-ddThh:mm:ss"/>
                                                 </Col>
                                                 <Col sm={2}>
-                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.toggle}>Sync Data</Button>
+                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.runPeriodicDataSyncProc}>Sync Data</Button>
                                                 </Col>
                                                 <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.perSyncOnOffChanged} defaultChecked={this.state.isPerSyncOnOff} name="sfSyncOnOff" label={this.state.perSyncOnOffLabel} />
                                             </FormGroup>
@@ -178,6 +188,6 @@ function mapStateToProps(state) {
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({runFullSFSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}, dispatch) }
+    return { actions: bindActionCreators({runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AdminComponent);

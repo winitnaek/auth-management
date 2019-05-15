@@ -13,20 +13,21 @@ class AddAccount extends React.Component {
             accounts:accounts,
             products:products,
             selectedAccount:'',
-            selectedProduct:''
+            selectedProduct:'',
+            dbtnsave:true
         };
-        this.toggleUIConfirmOk = this.toggleUIConfirmOk.bind(this);
+        this.toggleUIConfirmSave = this.toggleUIConfirmSave.bind(this);
         this.toggleUIConfirmCancel = this.toggleUIConfirmCancel.bind(this);
-        this.handleAccountChange = this.handleAccountChange.bind(this);
+        this.handleAcctNameChange = this.handleAcctNameChange.bind(this);
         this.handleProductChange = this.handleProductChange.bind(this);
+        this.handleDatasetChange = this.handleDatasetChange.bind(this);
     }
-    handleAccountChange(selectedAccount){
-        console.log('selectedAccount');
-        console.log(selectedAccount);
-        this.setState({ selectedAccount});
-        let account = `${selectedAccount.value}`;
-        console.log('account');
-        console.log(account);
+    handleAcctNameChange(e){
+        if(e.target.value.length > 0 && this.state.selectedProduct.value && this.datasetName.value){
+            this.setState({dbtnsave:false});
+        }else{
+            this.setState({dbtnsave:true});
+        }
     }
     handleProductChange(selectedProduct){
         console.log('selectedProduct');
@@ -35,25 +36,38 @@ class AddAccount extends React.Component {
         let product = `${selectedProduct.value}`;
         console.log('product');
         console.log(product);
+        if(this.accountName.value && product && this.datasetName.value){
+            this.setState({dbtnsave:false});
+        }else{
+            this.setState({dbtnsave:true});
+        }
     }
-    toggleUIConfirmOk() {
+    handleDatasetChange(e){
+        if(this.accountName.value && this.state.selectedProduct.value && e.target.value.length >0){
+            this.setState({dbtnsave:false});
+        }else{
+            this.setState({dbtnsave:true});
+        }
+    }
+    toggleUIConfirmSave() {
         this.props.handleOk();
     }
     toggleUIConfirmCancel() {
         this.props.handleCancel();
     }
+    
     render() {
         return (
             <div>
                 <Modal isOpen={this.props.showAddAccount} toggle={this.toggle} backdrop="static" size="lg">
-                    <ModalHeader toggle={this.toggleUIConfirmCancel}>Add Admin Account</ModalHeader>
+                    <ModalHeader toggle={this.toggleUIConfirmCancel}>Add Admin Dataset</ModalHeader>
                     <ModalBody>
                         <Form>
                             <FormGroup row>
                                 <Label sm={1}></Label>
-                                <Label sm={3}>Select Account</Label>
+                                <Label sm={3}>Account</Label>
                                 <Col sm={6} style={{ zIndex: 100 }}>
-                                <Input type="text" name="account" id="account" placeholder="Enter Account" />
+                                <Input type="text" name="accountName" innerRef={(input) => this.accountName = input} onChange={this.handleAcctNameChange} placeholder="Enter Account" />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -77,21 +91,21 @@ class AddAccount extends React.Component {
                                 <Label sm={1}></Label>
                                 <Label sm={3}>Dataset</Label>
                                 <Col sm={6} style={{ zIndex: 80 }}>
-                                    <Input type="text" name="dataset" id="datasetcompcid" placeholder="Enter Dataset" />
+                                    <Input type="text" name="datasetName" innerRef={(input) => this.datasetName = input} onChange={this.handleDatasetChange}  placeholder="Enter Dataset" />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Label sm={1}></Label>
                                 <Label sm={3}>Company CID</Label>
                                 <Col sm={6} style={{ zIndex: 80 }}>
-                                    <Input type="text" name="dataset" id="datasetcompcid" placeholder="Enter Company CID" />
+                                    <Input type="text" name="compCId" innerRef={(input) => this.compCId = input}  placeholder="Enter Company CID" />
                                 </Col>
                             </FormGroup>
                         </Form>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" className="btn btn-primary mr-auto" onClick={this.toggleUIConfirmCancel}>Cancel</Button>
-                        <Button onClick={() => this.onPerformAction(4)} color="success">Save</Button>{' '}
+                        <Button onClick={() => this.toggleUIConfirmSave()} disabled={this.state.dbtnsave} color="success">Save</Button>{' '}
                     </ModalFooter>
                 </Modal>
             </div>

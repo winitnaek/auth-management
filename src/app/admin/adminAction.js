@@ -5,77 +5,53 @@ import {generateAppErrorEvent} from '../../base/utils/AppErrorEvent';
  * adminAction
  * @author Vinit
  */
-export function runFullSFSync() {
+export function runInitialDataSync() {
     return function (dispatch, getState) {
         const state = getState();
-        return adminAPI.runFullSFSync().then(fullsfsync => {
-            if(fullsfsync){
-                if(fullsfsync && fullsfsync.syncdate){
-                    dispatch(getEEW2PdfSuccess(fullsfsync));
-                }else if(fullsfsync && fullsfsync.message){
-                    dispatch(getEEW2PdfError(fullsfsync));
+        return adminAPI.runInitialDataSync().then(initialsync => {
+            if(initialsync){
+                if(initialsync && initialsync.syncdate){
+                    dispatch(runInitialDataSyncSuccess(initialsync));
+                }else if(initialsync && initialsync.message){
+                    dispatch(runInitialDataSyncError(initialsync));
                 }
             }else{
-                throw fullsfsync;
+                throw initialsync;
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
         });
     };
 }
-export function runFullSFSyncSuccess(fullsfsync) {
-    return { type: types.FULL_SF_SYNC_SUCCESS, fullsfsync };
+export function runInitialDataSyncSuccess(initialsync) {
+    return { type: types.INITIALDATA_SYNC_SUCCESS, fullsfsync };
 }
-export function runFullSFSyncError(fullsfsync) {
-    return { type: types.FULL_SF_SYNC_ERROR, fullsfsync };
+export function runInitialDataSyncError(initialsync) {
+    return { type: types.INITIALDATA_SYNC_ERROR, fullsfsync };
 }
-export function runSFSync(fromDateTime) {
+export function runPeriodicDataSync(fromDateTime) {
     return function (dispatch, getState) {
         const state = getState();
-        return adminAPI.runSFSync(fromDateTime).then(sfsync => {
-            if(sfsync){
-                if(sfsync && sfsync.syncdate){
-                    dispatch(runSFSyncSuccess(sfsync));
-                }else if(sfsync && sfsync.message){
-                    dispatch(runSFSyncError(sfsync));
+        return adminAPI.runPeriodicDataSync(fromDateTime).then(periodicsync => {
+            if(periodicsync){
+                if(periodicsync && periodicsync.syncdate){
+                    dispatch(runPeriodicDataSyncSuccess(periodicsync));
+                }else if(periodicsync && periodicsync.message){
+                    dispatch(runPeriodicDataSyncError(periodicsync));
                 }
             }else{
-                throw sfsync;
+                throw periodicsync;
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
         });
     };
 }
-export function runSFSyncSuccess(sfsync) {
-    return { type: types.SF_SYNC_SUCCESS, sfsync };
+export function runPeriodicDataSyncSuccess(periodicsync) {
+    return { type: types.PERIODIC_SYNC_SUCCESS, periodicsync };
 }
-export function runSFSyncError(sfsync) {
-    return { type: types.SF_SYNC_ERROR, sfsync };
-}
-export function runTPFSync(fromDateTime) {
-    return function (dispatch, getState) {
-        const state = getState();
-        return adminAPI.runTPFSync(fromDateTime).then(tpfsync => {
-            if(tpfsync){
-                if(tpfsync && tpfsync.syncdate){
-                    dispatch(runTPFSyncSuccess(tpfsync));
-                }else if(tpfsync && tpfsync.message){
-                    dispatch(runTPFSyncError(tpfsync));
-                }
-            }else{
-                throw tpfsync;
-            }
-        }).catch(error => {
-            generateAppErrorEvent(error.type,error.status,error.message,error);
-        });
-    };
-}
-export function runTPFSyncSuccess(tpfsync) {
-    return { type: types.TPF_SYNC_SUCCESS, tpfsync };
-}
-export function runTPFSyncError(tpfsync) {
-    return { type: types.TPF_SYNC_ERROR, tpfsync };
+export function runPeriodicDataSyncError(periodicsync) {
+    return { type: types.PERIODIC_SYNC_ERROR, periodicsync };
 }
 export function enablePeriodicDataSync(enabled) {
     return function (dispatch, getState) {
