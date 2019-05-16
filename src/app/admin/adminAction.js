@@ -78,10 +78,10 @@ export function enablePeriodicDataSyncError(enabled) {
     return { type: types.ENABLE_PERSYNC_ERROR, enabled };
 }
 
-export function addTenant(accountName, productName, datasetName) {
+export function addTenant(accountName, productName, datasetName,companyCID) {
     return function (dispatch, getState) {
         const state = getState();
-        return adminAPI.addTenant(accountName, productName, datasetName).then(teantdata => {
+        return adminAPI.addTenant(accountName, productName, datasetName,companyCID).then(teantdata => {
             if(teantdata){
                 if(teantdata && teantdata.message){
                     dispatch(addTenantError(teantdata));

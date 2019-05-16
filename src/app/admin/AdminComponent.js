@@ -7,7 +7,7 @@ import JqxDateTimeInput from '../../deps/jqwidgets-react/react_jqxdatetimeinput.
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}  from './adminAction';
+import {runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo,addTenant}  from './adminAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddAccount from './AddAccount';
 import AdminDatasetsGrid from './AdminDatasetsGrid';
@@ -38,7 +38,8 @@ class AdminComponent extends React.Component {
             openAddAdminAccount:false,
             perSyncOnOffLabel:perSyncOnOffLabel,
             isPerSyncOnOff:isPerSyncOnOff,
-            dsyncbtn:false
+            dsyncbtn:false,
+            refreshgrid:false
         };
       
         this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
@@ -47,6 +48,7 @@ class AdminComponent extends React.Component {
         this.handleSyncInProgress = this.handleSyncInProgress.bind(this);
         this.runInitialDataSyncProc = this.runInitialDataSyncProc.bind(this);
         this.runPeriodicDataSyncProc = this.runPeriodicDataSyncProc.bind(this);
+        this.handleAddAccountSave = this.handleAddAccountSave.bind(this);
         this.handleSyncInProgress();
         //this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), SYNCINFO_TIMER);
     }
@@ -85,7 +87,13 @@ class AdminComponent extends React.Component {
     }
     
     handleAddAccountCancel() {
-        this.setState({openAddAdminAccount:false});
+        this.setState({openAddAdminAccount:false,refreshgrid:false});
+    }
+    handleAddAccountSave(data){
+        console.log('data set new accounted added');
+        console.log(data);
+        this.props.admindata.adminTenants.push(data);
+        this.setState({openAddAdminAccount:false,refreshgrid:true});
     }
     perSyncOnOffChanged(event){
         if(this.sfSyncOnOff.checked==true){
@@ -164,9 +172,9 @@ class AdminComponent extends React.Component {
                         <Row>
                             <Label className="p-1"></Label>
                         </Row>
-                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions} openAddAcct={this.openAddAcct}/>):null}
+                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions} openAddAcct={this.openAddAcct} refreshgrid={this.state.refreshgrid}/>):null}
                     </Container>
-                    {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel}  showAddAccount={this.state.openAddAdminAccount} />):null}
+                    {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel} handleSave={this.handleAddAccountSave} showAddAccount={this.state.openAddAdminAccount} />):null}
                 </div>
             );
         }else{
@@ -188,6 +196,6 @@ function mapStateToProps(state) {
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo}, dispatch) }
+    return { actions: bindActionCreators({runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo,addTenant}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AdminComponent);

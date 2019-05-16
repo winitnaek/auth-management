@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Col, Input} from 'reactstrap';
+import adminAPI from './adminAPI'
 import Select from 'react-select';
 class AddAccount extends React.Component {
     constructor(props) {
@@ -50,7 +51,11 @@ class AddAccount extends React.Component {
         }
     }
     toggleUIConfirmSave() {
-        this.props.handleOk();
+        adminAPI.addTenant(this.accountName.value,this.state.selectedProduct.label, this.datasetName.value,this.compCId.value).then(function (tenant) {
+            console.log('tenant');
+            console.log(tenant);
+            return tenant;
+        }).then(data =>  this.props.handleSave(data));
     }
     toggleUIConfirmCancel() {
         this.props.handleCancel();

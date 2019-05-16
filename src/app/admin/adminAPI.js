@@ -71,10 +71,14 @@ class adminActionAPI {
               return error;
             });
     }
-    static addTenant(accountName, productName, datasetName) {
+    static addTenant(accountName, productName, datasetName, companyCID) {
         let paramurl = `${'?accountName='}${accountName}${'&productName='}${productName}${'&datasetName='}${datasetName}`;
         var svcs_url = `${svcs.ADD_TENANT}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
             credentials: 'same-origin'
         }).then(response => {
             if (response.ok) {
