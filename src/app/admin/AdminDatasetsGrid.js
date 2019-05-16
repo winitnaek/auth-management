@@ -38,12 +38,21 @@ class AdminDatasetsGrid extends React.Component {
             if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
                 var id = this.refs.adminAccountGrid.getrowid(selectedrowindex);
                 let data = this.refs.adminAccountGrid.getrowdata(id);
+                if(!data && rowscount ==1){
+                    let datarow = this.refs.adminAccountGrid.getrows();
+                    this.props.actions.deleteTenant(datarow[0].id).then(response => {
+                        return response
+                    }).catch(error => {
+                        throw new SubmissionError(error)
+                    });
+                }else{
+                    this.props.actions.deleteTenant(data.id).then(response => {
+                        return response
+                    }).catch(error => {
+                        throw new SubmissionError(error)
+                    })
+                }
                 var commit = this.refs.adminAccountGrid.deleterow(id);
-                this.props.actions.deleteTenant(data.id).then(response => {
-                    return response
-                }).catch(error => {
-                    throw new SubmissionError(error)
-                })
             }
         }
         let columns =

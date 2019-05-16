@@ -124,7 +124,7 @@ class AccountsComponent extends React.Component {
             { text: 'Product', datafield: 'prodName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Enabled', datafield: 'enabled',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Attached Config', datafield: 'ssoConfDsplName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Linked Config', datafield: 'ssoConfDsplName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 if(rowdata.ssoConfDsplName){
                     return `<a href="#" title="${'Un-Link'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem;" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Un-Link'}</button></div></a>`;

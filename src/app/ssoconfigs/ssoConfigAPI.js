@@ -55,6 +55,10 @@ class ssoConfigAPI {
         let paramurl = `${'?id='}${id}`;
         var svcs_url = `${svcs.DELETE_SSO_CONFIG}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
             credentials: 'same-origin'
         }).then(response => {
             if (response.ok) {

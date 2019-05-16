@@ -5,7 +5,7 @@ export default function auditLogsReducer(state = initialState.auditlogsdata, act
   switch (action.type) {
     case types.GET_AUDITLOGS_SUCCESS: {
       return Object.assign({}, ...state, {
-        auditlogs: Object.assign([], ...state.auditlogs, action.auditlogsdata.auditlogs)
+        auditlogs: Object.assign([], ...state.auditlogs, action.auditlogsdata)
       });
     }
     default:

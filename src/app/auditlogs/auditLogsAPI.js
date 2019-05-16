@@ -30,7 +30,8 @@ class auditLogsAPI {
         });
     }
     static getAuditLogs(lastNoDays) {
-        var svcs_url = `${svcs.GET_AUDIT_LOGS}`;
+        let paramurl = `${'?lastNoDays='}${lastNoDays}`;
+        var svcs_url = `${svcs.GET_AUDIT_LOGS}${paramurl}`;
         return fetch(URLUtils.buildURL(svcs_url), {
             credentials: 'same-origin'
         }).then(response => {

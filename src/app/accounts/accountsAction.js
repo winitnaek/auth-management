@@ -63,16 +63,6 @@ export function loadLinkConfig(linkdata){
 export function getTenantAccounts(includeImported) {
     return function (dispatch, getState) {
         const state = getState();
-        /*let data = [{'id':'100', 'acctName':'IBM', 'prodName':'TPF','dataset':'Dataset IBM', 'isEnabled':true, 'configname':'IBM Staging'}
-                    ,{'id':'101', 'acctName':'Panera', 'prodName':'TF','dataset':'Dataset Pan','isEnabled':true, 'configname':''},
-                    {'id':'102', 'acctName':'Dannys', 'prodName':'CF','dataset':'Dataset Dan', 'isEnabled':true, 'configname':'Dannys prodconf'}];
-        let accountsdata = {
-            accounts:data
-        }
-        return new Promise((resolve, reject) => { 
-        dispatch(getTenantAccountsSuccess(accountsdata));  
-        setTimeout(() => resolve(accountsdata), 100); 
-        }); */
         return adminAPI.getTenants(includeImported).then(tenants => {
             if(tenants){
                 if(tenants && tenants.message){

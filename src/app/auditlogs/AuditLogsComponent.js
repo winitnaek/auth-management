@@ -15,14 +15,14 @@ class AuditLogsComponent extends React.Component {
         {
             datatype: "json",
             datafields: [
-                { name: 'dateTime', type: 'string' },
+                { name: 'createdDate', type: 'string' },
                 { name: 'serverHost', type: 'string' },
                 { name: 'user', type: 'string' },
                 { name: 'clientHost', type: 'string' },
                 { name: 'operation', type: 'string' },
                 { name: 'accountId', type: 'string' },
-                { name: 'accountName', type: 'string' },
-                { name: 'productName', type: 'string' },
+                { name: 'account', type: 'string' },
+                { name: 'product', type: 'string' },
                 { name: 'dataset', type: 'string' },
                 { name: 'entity', type: 'string' },
                 { name: 'message', type: 'string' }
@@ -42,13 +42,13 @@ class AuditLogsComponent extends React.Component {
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
             let columns =
             [
-            { text: 'Timestamp', datafield: 'dateTime',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Timestamp', datafield: 'createdDate',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Server Host', datafield: 'serverHost',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'User', datafield: 'user',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Client Host', datafield: 'clientHost',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Operation', datafield: 'operation',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Account', datafield: 'accountName',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Product', datafield: 'productName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Account', datafield: 'account',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Product', datafield: 'product',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Entity', datafield: 'entity',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Message', datafield: 'message',  cellsalign: 'center', width: 'auto', align: 'center'},

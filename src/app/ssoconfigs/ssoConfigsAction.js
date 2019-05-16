@@ -1,5 +1,6 @@
 import * as types from '../../base/constants/ActionTypes'
 import ssoConfigAPI from './ssoConfigAPI';
+import accountsAPI from '../accounts/accountsAPI'
 import {generateAppErrorEvent} from '../../base/utils/AppErrorEvent';
 /**
  * adminAction
@@ -8,40 +9,25 @@ import {generateAppErrorEvent} from '../../base/utils/AppErrorEvent';
 export function getSSOConfigsByTenant() {
     return function (dispatch, getState) {
         const state = getState();
-        let data = [
-            {'accountId':'100', 'accountName':'IBM', 'configId':'conf1','configName':'Config IBM'},
-            {'accountId':'101', 'accountName':'Panera', 'configId':'conf2','configName':'Config Pan'},
-            {'accountId':'103', 'accountName':'Walmart', 'configId':'conf3','configName':'Config Wal'},
-            {'accountId':'104', 'accountName':'HBO', 'configId':'conf4','configName':'Config HBO'},
-            {'accountId':'105', 'accountName':'BSI', 'configId':'conf5','configName':'Config BSI'},
-            {'accountId':'106', 'accountName':'TestComp', 'configId':'conf6','configName':'Config Com'},
-            {'accountId':'107', 'accountName':'Microsoft', 'configId':'conf7','configName':'Config Msft'}];
-        let ssoconfigsdata = {
-            ssoconfigs:data
-        }
-        return new Promise((resolve, reject) => { 
-            dispatch(getSSOConfigsByTenantSuccess(ssoconfigsdata));  
-        setTimeout(() => resolve(ssoconfigsdata), 100); 
-        }); 
-        /*return ssoConfigAPI.getSSOConfigsByTenant().then(ssoconfigsdata => {
+        return accountsAPI.getSSOConfigs().then(ssoconfigsdata => {
             if(ssoconfigsdata){
-                if(ssoconfigsdata && ssoconfigsdata.syncdate){
-                    dispatch(getSSOConfigsByTenantSuccess(ssoconfigsdata));
-                }else if(ssoconfigsdata && ssoconfigsdata.message){
-                    dispatch(getSSOConfigsByTenantError(ssoconfigsdata));
+                if(ssoconfigsdata && ssoconfigsdata.message){
+                    dispatch(getSSOConfigsError(ssoconfigsdata));
+                }else if(ssoconfigsdata){
+                    dispatch(getSSOConfigsSuccess(ssoconfigsdata));
                 }
             }else{
                 throw ssoconfigsdata;
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
-        });*/
+        });
     };
 }
-export function getSSOConfigsByTenantSuccess(ssoconfigsdata) {
+export function getSSOConfigsSuccess(ssoconfigsdata) {
     return { type: types.GET_SSOCONFIG_BYTENANTS_SUCCESS, ssoconfigsdata };
 }
-export function getSSOConfigsByTenantError(ssoconfigsdata) {
+export function getSSOConfigsError(ssoconfigsdata) {
     return { type: types.GET_SSOCONFIG_BYTENANTS_ERROR, ssoconfigsdata };
 }
 export function addSSOConfig() {
@@ -95,7 +81,7 @@ export function updateSSOConfigError(ssoconfigdata) {
 export function deleteSSOConfig(id) {
     return function (dispatch, getState) {
         const state = getState();
-        return ssoConfigAPI.deleteSSOConfig().then(deleted => {
+        return ssoConfigAPI.deleteSSOConfig(id).then(deleted => {
             if(deleted){
                 if(deleted && deleted.message){
                     dispatch(deleteSSOConfigError(deleted));

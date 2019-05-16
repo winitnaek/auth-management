@@ -5,7 +5,7 @@ export default function ssoConfigsReducer(state = initialState.ssoconfigsdata, a
   switch (action.type) {
     case types.GET_SSOCONFIG_BYTENANTS_SUCCESS: {
       return Object.assign({}, ...state, {
-        ssoconfigs: Object.assign([], ...state.ssoconfigs, action.ssoconfigsdata.ssoconfigs)
+        ssoconfigs: Object.assign([], ...state.ssoconfigs, action.ssoconfigsdata)
       });
     }
     default:

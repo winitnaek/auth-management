@@ -6,7 +6,7 @@ import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {addSSOConfig,loadModifyConfig,loadTestSsoIdp}  from './ssoConfigsAction';
+import {addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig}  from './ssoConfigsAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddSSOConfig from './AddSSOConfig';
 import TestSsoIdp from './TestSsoIdp';
@@ -17,10 +17,9 @@ class SSOConfigComponent extends React.Component {
         {
             datatype: "json",
             datafields: [
-                { name: 'accountId', type: 'string' },
-                { name: 'accountName', type: 'string' },
-                { name: 'configId', type: 'string' },
-                { name: 'configName', type: 'string' }
+                { name: 'id', type: 'string' },
+                { name: 'acctName', type: 'string' },
+                { name: 'dsplName', type: 'string' }
             ],
             pagesize: 10,
             localdata:this.props.ssoconfigsdata
@@ -80,34 +79,35 @@ class SSOConfigComponent extends React.Component {
         console.log('rowdata');
         console.log(rowdata);
     }
+
     renderSSOConfigUI(ssoconfigsdata){
         if(ssoconfigsdata){
             const removeMe = (id) => {
-                console.log(id);
                 var selectedrowindex = this.refs.manageConfigsGrid.getselectedrowindex();
-                console.log('selectedrowindex '+selectedrowindex);
                 var rowscount = this.refs.manageConfigsGrid.getdatainformation().rowscount;
-                console.log('rowscount '+rowscount);
                 if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
                     var id = this.refs.manageConfigsGrid.getrowid(selectedrowindex);
-                    var commit = this.refs.manageConfigsGrid.deleterow(id);
-                    this.state.w2dgridata.splice(selectedrowindex,1);
-                    let enableAction=false;
-                    if(rowscount==1){
-                        enableAction = true;
+                    let data = this.refs.manageConfigsGrid.getrowdata(id);
+                    if(!data && rowscount ==1){
+                        let datarow = this.refs.manageConfigsGrid.getrows();
+                        this.props.actions.deleteSSOConfig(datarow[0].id);
+                    }else{
+                        this.props.actions.deleteSSOConfig(data.id);
                     }
+                    var commit = this.refs.manageConfigsGrid.deleterow(id);
                 }
             }
+            
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
             let columns =
             [
-            { text: 'Account', datafield: 'accountName',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Config', datafield: 'configName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Config', datafield: 'dsplName',  cellsalign: 'center', width: 'auto', align: 'center'},    
+            { text: 'Linked To', datafield: 'acctName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Modify', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onModifyConfig('${ndex}')}>${'Modify '+rowdata.configName}</button></div></a>`;}
+                return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onModifyConfig('${ndex}')}>${'Modify '+rowdata.dsplName}</button></div></a>`;}
             },
             { text: 'Test Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return `<a href="#" title="${'Test Config '+rowdata.configName}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onTestSsoIdp('${ndex}')}>${'Test '+rowdata.configName}</button></div></a>`;}
+                return `<a href="#" title="${'Test Config '+rowdata.dsplName}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onTestSsoIdp('${ndex}')}>${'Test '+rowdata.dsplName}</button></div></a>`;}
             },
             { text: '        ', cellsalign: 'center', width: '70', align: 'center', datafield: 'Delete', columntype: 'button', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return 'Delete';
@@ -130,7 +130,7 @@ class SSOConfigComponent extends React.Component {
                             sortable={false} altrows={false} enabletooltips={false}
                             autoheight={true} editable={false} columns={columns}
                             filterable={false} showfilterrow={false}
-                            selectionmode={'multiplerowsextended'}/>
+                            selectionmode={'multiplerowsextended'} />
                         </Col>
                         </Row>
                     </Container>
@@ -159,6 +159,6 @@ function mapStateToProps(state) {
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({addSSOConfig,loadModifyConfig,loadTestSsoIdp}, dispatch) }
+    return { actions: bindActionCreators({addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(SSOConfigComponent);
