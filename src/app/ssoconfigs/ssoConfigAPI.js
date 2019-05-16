@@ -7,8 +7,8 @@ import { ADMIN_ERROR_MSG } from '../../base/utils/AppErrorEvent';
  * @author Vinit
  */
 class ssoConfigAPI {
-    static addSSOConfig(SSOproperties) {
-        let tt = JSON.stringify(SSOproperties);
+    static addSSOConfig(ssoConfigProps) {
+        let tt = JSON.stringify(ssoConfigProps);
         var svcs_url = `${svcs.ADD_SSO_CONFIG}`;
         return fetch(URLUtils.buildURL(svcs_url), {
             method: 'POST',
@@ -29,8 +29,8 @@ class ssoConfigAPI {
             return error;
         });
     }
-    static updateSSOConfig(SSOproperties) {
-        let tt = JSON.stringify(SSOproperties);
+    static updateSSOConfig(ssoConfigProps) {
+        let tt = JSON.stringify(ssoConfigProps);
         var svcs_url = `${svcs.UPDATE_SSO_CONFIG}`;
         return fetch(URLUtils.buildURL(svcs_url), {
             method: 'POST',

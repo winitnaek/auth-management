@@ -6,7 +6,7 @@ import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig}  from './ssoConfigsAction';
+import {addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig,updateSSOConfig}  from './ssoConfigsAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddSSOConfig from './AddSSOConfig';
 import TestSsoIdp from './TestSsoIdp';
@@ -19,7 +19,24 @@ class SSOConfigComponent extends React.Component {
             datafields: [
                 { name: 'id', type: 'string' },
                 { name: 'acctName', type: 'string' },
-                { name: 'dsplName', type: 'string' }
+                { name: 'dsplName', type: 'string' },
+                { name: 'idpIssuer', type: 'string' },
+                { name: 'idpReqURL', type: 'string' },
+                { name: 'spConsumerURL', type: 'string' },
+                { name: 'spIssuer', type: 'string' },
+                { name: 'attribIndex', type: 'int' },
+                { name: 'validateRespSignature', type: 'boolean' },
+                { name: 'validateIdpIssuer', type: 'boolean' },
+                { name: 'signRequests', type: 'boolean' },
+                { name: 'allowLogout', type: 'boolean' },
+                { name: 'redirectToApplication', type: 'boolean' },
+                { name: 'nonSamlLogoutURL', type: 'string' },
+                { name: 'appRedirectURL', type: 'string' },
+                { name: 'certAlias', type: 'string' },
+                { name: 'certPassword', type: 'string' },
+                { name: 'certText', type: 'string' },
+                { name: 'expireRequestSecs', type: 'int' },
+                { name: 'enabled', type: 'boolean' },
             ],
             pagesize: 10,
             localdata:this.props.ssoconfigsdata
@@ -29,17 +46,26 @@ class SSOConfigComponent extends React.Component {
             openAddSSOConfig:false,
             addModifyTitle:'',
             openTestSOIdp:false,
-            testSsoIdpTitle:''
+            testSsoIdpTitle:'',
+            rowdata:{},
+            isnewconfig:false
         };
         this.handleShowModifyConfig = this.handleShowModifyConfig.bind(this);
+        this.handleSSOConfigSave = this.handleSSOConfigSave.bind(this);
         this.handleShowModifyConfigCancel = this.handleShowModifyConfigCancel.bind(this);
         this.handleTestSSOIdpCancel = this.handleTestSSOIdpCancel.bind(this);
     }
-    onAddAdminAccount() {
-        this.setState({openAddSSOConfig:true,addModifyTitle:'Add New SSO Config'});
+    onAddSSOConfig() {
+        this.setState({openAddSSOConfig:true,isnewconfig:true,addModifyTitle:'Add New SSO Config'});
+        /*this.props.actions.addSSOConfig(ssoConfigProps).then(response => {
+            return response
+        }).catch(error => {
+            console.log('Error Occured In Sync onAddSSOConfig.');
+            console.log(error);
+        });*/
      }
      handleShowModifyConfigCancel() {
-         this.setState({openAddSSOConfig:false});
+         this.setState({openAddSSOConfig:false,isnewconfig:false});
      }
      handleTestSSOIdpCancel() {
         this.setState({openTestSOIdp:false});
@@ -52,6 +78,7 @@ class SSOConfigComponent extends React.Component {
             }
             this.props.actions.loadModifyConfig(modifydata);
             let data = this.refs.manageConfigsGrid.getrowdata(nextProps.modifydata.configid);
+            //alert('Selected Config for Modify : '+ Object.values(data));
             this.handleShowModifyConfig(data);
         }else if(nextProps.ssoidpdata && nextProps.ssoidpdata.testssoidp){
             var ssoidpdata = {
@@ -64,9 +91,41 @@ class SSOConfigComponent extends React.Component {
         }
     }
     handleShowModifyConfig(rowdata) {        
+        console.log(rowdata);
+        rowdata = {  
+            "id":1,
+            "acctName":"Walmart",
+            "dsplName":"TestConfig",
+            "idpIssuer":"testuser",
+
+            "idpReqURL":"http://localhost:8080/idpReqURL",
+            "spConsumerURL":"http://localhost:8080/spConsumerURL",
+            "spIssuer":"TestspIssuer",
+            "attribIndex":400,
+
+            "validateRespSignature":true,
+            "validateIdpIssuer":true,
+            "signRequests":true,
+            "allowLogout":true,
+            "redirectToApplication":true,
+
+            "nonSamlLogoutURL":"http://localhost:8080/nonSamlLogoutURL",
+            "appRedirectURL":"http://localhost:8080/appRedirectURL",
+
+            "certAlias":"TestcertAlias",
+            "certPassword":"TestcertPassword",
+
+            "certText":"certTextcertTextcertTextcertTextcertTextcertText",
+
+            "expireRequestSecs":100,
+            "enabled":true
+         }
+
         this.setState({
             openAddSSOConfig: true,
-            addModifyTitle: 'Modify SSO Config'
+            isnewconfig:false,
+            addModifyTitle: 'Modify SSO Config',
+            rowdata:rowdata
         })
         console.log('rowdata');
         console.log(rowdata);
@@ -79,7 +138,10 @@ class SSOConfigComponent extends React.Component {
         console.log('rowdata');
         console.log(rowdata);
     }
-
+    handleSSOConfigSave() {
+        this.setState({openAddSSOConfig:false});
+        alert('save/updated')
+    }
     renderSSOConfigUI(ssoconfigsdata){
         if(ssoconfigsdata){
             const removeMe = (id) => {
@@ -124,7 +186,7 @@ class SSOConfigComponent extends React.Component {
                         </Row>
                         <Row>
                         <Col>
-                        <Button color="secondary" size="sm" className="mb-2" onClick={() => this.onAddAdminAccount()}>Add New SSO Config</Button>{' '}
+                        <Button color="secondary" size="sm" className="mb-2" onClick={() => this.onAddSSOConfig()}>Add New SSO Config</Button>{' '}
                         <JqxGrid ref='manageConfigsGrid'
                             width={'100%'} source={dataAdapter} pageable={true} pagermode ={'simple'}
                             sortable={false} altrows={false} enabletooltips={false}
@@ -134,7 +196,7 @@ class SSOConfigComponent extends React.Component {
                         </Col>
                         </Row>
                     </Container>
-                    {this.state.openAddSSOConfig ? (<AddSSOConfig handleCancel={this.handleShowModifyConfigCancel}  showAddAccount={this.state.openAddSSOConfig} title={this.state.addModifyTitle}/>):null}
+                    {this.state.openAddSSOConfig ? (<AddSSOConfig actions={this.props.actions} handleCancel={this.handleShowModifyConfigCancel} handleSave={this.handleSSOConfigSave} showAddAccount={this.state.openAddSSOConfig} title={this.state.addModifyTitle} rowdata={this.state.rowdata} modenew={this.state.isnewconfig} accounts={this.props.accounts}/>):null}
                     {this.state.openTestSOIdp ? (<TestSsoIdp handleCancel={this.handleTestSSOIdpCancel}  showAddAccount={this.state.openTestSOIdp} title={this.state.testSsoIdpTitle}/>):null}
                 </div>
             );
@@ -155,10 +217,11 @@ function mapStateToProps(state) {
     return {
         ssoconfigsdata: state.ssoconfigsdata.ssoconfigs,
         modifydata:state.modifydata,
-        ssoidpdata:state.ssoidpdata
+        ssoidpdata:state.ssoidpdata,
+        accounts:state.accountsdata.accounts
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig}, dispatch) }
+    return { actions: bindActionCreators({addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig,updateSSOConfig}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(SSOConfigComponent);

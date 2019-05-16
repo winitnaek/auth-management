@@ -30,10 +30,10 @@ export function getSSOConfigsSuccess(ssoconfigsdata) {
 export function getSSOConfigsError(ssoconfigsdata) {
     return { type: types.GET_SSOCONFIG_BYTENANTS_ERROR, ssoconfigsdata };
 }
-export function addSSOConfig() {
+export function addSSOConfig(ssoConfigProps) {
     return function (dispatch, getState) {
         const state = getState();
-        return ssoConfigAPI.addSSOConfig().then(ssoconfigdata => {
+        return ssoConfigAPI.addSSOConfig(ssoConfigProps).then(ssoconfigdata => {
             if(ssoconfigdata){
                 if(ssoconfigdata && ssoconfigdata.syncdate){
                     dispatch(addSSOConfigSuccess(ssoconfigdata));
@@ -54,10 +54,10 @@ export function addSSOConfigSuccess(ssoconfigdata) {
 export function addSSOConfigError(ssoconfigdata) {
     return { type: types.ADD_SSO_CONFIG_ERROR, ssoconfigdata };
 }
-export function updateSSOConfig() {
+export function updateSSOConfig(ssoConfigProps) {
     return function (dispatch, getState) {
         const state = getState();
-        return ssoConfigAPI.updateSSOConfig().then(ssoconfigdata => {
+        return ssoConfigAPI.updateSSOConfig(ssoConfigProps).then(ssoconfigdata => {
             if(ssoconfigdata){
                 if(ssoconfigdata && ssoconfigdata.syncdate){
                     dispatch(updateSSOConfigSuccess(ssoconfigdata));
