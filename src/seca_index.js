@@ -63,7 +63,8 @@ function renderSecAdmApplication(elem, renderName) {
             throw new SubmissionError({ _error: error });
         });
     }else if(renderName==rname.RN_SSO_CONFIGS){
-        store.dispatch(getTenantAccounts(true)).then(store.dispatch(getSSOConfigsByTenant())).then((result) => {
+       store.dispatch(getTenantAccounts(true));
+       store.dispatch(getSSOConfigsByTenant()).then((result) => {
             renderManageConfigsData(elem);
             //setTimeout(function() {    
             //    renderAdminData(elem);
