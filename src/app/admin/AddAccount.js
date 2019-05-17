@@ -31,12 +31,8 @@ class AddAccount extends React.Component {
         }
     }
     handleProductChange(selectedProduct){
-        console.log('selectedProduct');
-        console.log(selectedProduct);
         this.setState({ selectedProduct});
         let product = `${selectedProduct.value}`;
-        console.log('product');
-        console.log(product);
         if(this.accountName.value && product && this.datasetName.value){
             this.setState({dbtnsave:false});
         }else{
@@ -52,8 +48,6 @@ class AddAccount extends React.Component {
     }
     toggleUIConfirmSave() {
         adminAPI.addTenant(this.accountName.value,this.state.selectedProduct.label, this.datasetName.value,this.compCId.value).then(function (tenant) {
-            console.log('tenant');
-            console.log(tenant);
             return tenant;
         }).then(data =>  this.props.handleSave(data));
     }

@@ -9,7 +9,7 @@ import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
 import {runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo,addTenant}  from './adminAction';
 import {divStylePA} from '../../base/constants/AppConstants';
-import AddAccount from './AddAccount';
+
 import AdminDatasetsGrid from './AdminDatasetsGrid';
 const SYNCINFO_TIMER =10000;
 class AdminComponent extends React.Component {
@@ -35,20 +35,16 @@ class AdminComponent extends React.Component {
         }
         this.state = {
             source: source,
-            openAddAdminAccount:false,
             perSyncOnOffLabel:perSyncOnOffLabel,
             isPerSyncOnOff:isPerSyncOnOff,
             dsyncbtn:false,
             refreshgrid:false
         };
-      
-        this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
         this.perSyncOnOffChanged = this.perSyncOnOffChanged.bind(this);
-        this.openAddAcct = this.openAddAcct.bind(this);
         this.handleSyncInProgress = this.handleSyncInProgress.bind(this);
         this.runInitialDataSyncProc = this.runInitialDataSyncProc.bind(this);
         this.runPeriodicDataSyncProc = this.runPeriodicDataSyncProc.bind(this);
-        this.handleAddAccountSave = this.handleAddAccountSave.bind(this);
+        
         this.handleSyncInProgress();
         //this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), SYNCINFO_TIMER);
     }
@@ -81,19 +77,6 @@ class AdminComponent extends React.Component {
             console.log('Sync interval is cleared.');
             console.log(error);
         });
-    }
-    openAddAcct() {
-        this.setState({openAddAdminAccount:true});
-    }
-    
-    handleAddAccountCancel() {
-        this.setState({openAddAdminAccount:false,refreshgrid:false});
-    }
-    handleAddAccountSave(data){
-        console.log('data set new accounted added');
-        console.log(data);
-        this.props.admindata.adminTenants.push(data);
-        this.setState({openAddAdminAccount:false,refreshgrid:true});
     }
     perSyncOnOffChanged(event){
         if(this.sfSyncOnOff.checked==true){
@@ -172,9 +155,8 @@ class AdminComponent extends React.Component {
                         <Row>
                             <Label className="p-1"></Label>
                         </Row>
-                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions} openAddAcct={this.openAddAcct} refreshgrid={this.state.refreshgrid}/>):null}
+                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions} refreshgrid={this.state.refreshgrid}/>):null}
                     </Container>
-                    {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel} handleSave={this.handleAddAccountSave} showAddAccount={this.state.openAddAdminAccount} />):null}
                 </div>
             );
         }else{

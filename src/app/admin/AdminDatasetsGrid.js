@@ -1,7 +1,10 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
 import {Button, Card, CardHeader, CardBody, Col,Row} from 'reactstrap';
 import {deleteTenant}  from './adminAction';
+import AddAccount from './AddAccount';
 class AdminDatasetsGrid extends React.Component {
     constructor(props) {
         super(props);
@@ -20,18 +23,25 @@ class AdminDatasetsGrid extends React.Component {
         };
         this.state = {
             source: source,
-            deleted:false
+            deleted:false,
+            openAddAdminAccount:false
         };
+        this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
+        this.handleAddAccountSave = this.handleAddAccountSave.bind(this);
         this.onAddAdminAccount = this.onAddAdminAccount.bind(this);
-        if(this.props.refreshgrid){
-            this.state.source.localdata =data; 
-            this.refs.adminAccountGrid.updatebounddata('data');
-        }
+    }
+    handleAddAccountSave(data){
+        this.props.adminTenants.push(data);
+        this.state.source.localdata=this.props.adminTenants;
+        this.refs.adminAccountGrid.updatebounddata();
+        this.setState({openAddAdminAccount:false});
+    }
+    handleAddAccountCancel() {
+        this.setState({openAddAdminAccount:false});
     }
     onAddAdminAccount() {
-        this.props.openAddAcct();
-     }
-
+        this.setState({openAddAdminAccount:true});
+    }
     render() {
         let dataAdapter = new $.jqx.dataAdapter(this.state.source);
         const removeMe = (id) => {
@@ -73,6 +83,7 @@ class AdminDatasetsGrid extends React.Component {
         },
         ];
         return (
+            <div>
             <Row>
                 <Col>
                     <Card>
@@ -89,7 +100,17 @@ class AdminDatasetsGrid extends React.Component {
                     </Card>
                 </Col>
             </Row>
+            {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel} handleSave={this.handleAddAccountSave} showAddAccount={this.state.openAddAdminAccount} />):null}
+            </div>
         );
     }
 }
-export default AdminDatasetsGrid;
+function mapStateToProps(state) {
+    return {
+      emps: state.admindata.adminTenants
+    }
+  }
+  function mapDispatchToProps(dispatch) {
+     
+  }
+export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(AdminDatasetsGrid);
