@@ -26,7 +26,7 @@ class AccountsComponent extends React.Component {
                 { name: 'ssoConfId', type: 'int' },
                 { name: 'imported', type: 'boolean' }
             ],
-            pagesize: 5,
+            pagesize: 10,
             localdata:this.props.accountsdata
         };
         this.state = {
