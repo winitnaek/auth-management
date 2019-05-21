@@ -155,7 +155,7 @@ class AdminComponent extends React.Component {
                         <Row>
                             <Label className="p-1"></Label>
                         </Row>
-                        {this.props.admindata.adminTenants && this.props.admindata.adminTenants.length > 0 ? (<AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions} refreshgrid={this.state.refreshgrid}/>):null}
+                        <AdminDatasetsGrid adminTenants={this.props.admindata.adminTenants} actions={this.props.actions} refreshgrid={this.state.refreshgrid}/>
                     </Container>
                 </div>
             );
