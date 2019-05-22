@@ -15,7 +15,7 @@ class AuditLogsComponent extends React.Component {
         {
             datatype: "json",
             datafields: [
-                { name: 'createdDate', type: 'string' },
+                { name: 'createdDate', type: 'date' },
                 { name: 'serverHost', type: 'string' },
                 { name: 'user', type: 'string' },
                 { name: 'clientHost', type: 'string' },
@@ -42,7 +42,7 @@ class AuditLogsComponent extends React.Component {
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
             let columns =
             [
-            { text: 'Timestamp', datafield: 'createdDate',  cellsalign: 'center', width: '20%', align: 'center',filtertype: 'range'},
+            { text: 'Timestamp', datafield: 'createdDate', cellsformat: 'yyyy-MM-dd hh:mm:ss', cellsalign: 'center', width: '20%', align: 'center',filtertype: 'range'},
             { text: 'Account', datafield: 'account',  cellsalign: 'center', width: '6%', align: 'center'},
             { text: 'Product', datafield: 'product',  cellsalign: 'center', width: '5%', align: 'center'},
             { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: '15%', align: 'center'},
