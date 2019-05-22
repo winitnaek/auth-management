@@ -57,7 +57,7 @@ class LinkConfigToTenant extends React.Component {
                                 <Label sm={1}></Label>
                                 <Label sm={3}>Selected Account</Label>
                                 <Col sm={6}>
-                                <Label sm={3} style={{paddingLeft:0}}>{this.state.linkrow.acctName}</Label>
+                                <Label style={{paddingLeft:0}}>{this.state.linkrow.acctName}</Label>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>

@@ -42,15 +42,10 @@ class AuditLogsComponent extends React.Component {
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
             let columns =
             [
-            { text: 'Timestamp', datafield: 'createdDate',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Server Host', datafield: 'serverHost',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'User', datafield: 'user',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Client Host', datafield: 'clientHost',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Operation', datafield: 'operation',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Account', datafield: 'account',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Product', datafield: 'product',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Entity', datafield: 'entity',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Timestamp', datafield: 'createdDate',  cellsalign: 'center', width: '20%', align: 'center',filtertype: 'range'},
+            { text: 'Account', datafield: 'account',  cellsalign: 'center', width: '6%', align: 'center'},
+            { text: 'Product', datafield: 'product',  cellsalign: 'center', width: '5%', align: 'center'},
+            { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: '15%', align: 'center'},
             { text: 'Message', datafield: 'message',  cellsalign: 'center', width: 'auto', align: 'center'},
             ];
             return(
@@ -65,7 +60,7 @@ class AuditLogsComponent extends React.Component {
                             width={'100%'} source={dataAdapter} pageable={true} pagermode ={'simple'}
                             sortable={false} altrows={false} enabletooltips={false}
                             autoheight={true} editable={false} columns={columns}
-                            filterable={false} showfilterrow={false}
+                            filterable={true} showfilterrow={true} columnsresize ={true}
                             selectionmode={'multiplerowsextended'}/>
                         </Col>
                         </Row>

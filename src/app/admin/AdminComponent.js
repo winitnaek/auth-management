@@ -46,7 +46,7 @@ class AdminComponent extends React.Component {
         this.runPeriodicDataSyncProc = this.runPeriodicDataSyncProc.bind(this);
         
         this.handleSyncInProgress();
-        //this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), SYNCINFO_TIMER);
+        this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), SYNCINFO_TIMER);
     }
     runPeriodicDataSyncProc(){
         this.props.actions.runPeriodicDataSync(this.refs.lastPerSyncDt.val());

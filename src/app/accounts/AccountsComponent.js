@@ -10,6 +10,7 @@ import {loadLinkConfig,loadUnLinkConfig}  from './accountsAction';
 import accountsAPI from './accountsAPI';
 import {divStylePA} from '../../base/constants/AppConstants';
 import LinkConfigToTenant from './LinkConfigToTenant';
+import UIAlert from '../common/UIAlert';
 class AccountsComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -33,11 +34,26 @@ class AccountsComponent extends React.Component {
             source: source,
             showLinkTenantToConfig:false,
             linkrow:'',
-            ssoconfigs:[]
+            ssoconfigs:[],
+            showAlertAddTenantToConfig:false,
+            showAlert:false
         };
         this.handleShowLinkTenantToConfig = this.handleShowLinkTenantToConfig.bind(this);
         this.handleTenantConfigCancel = this.handleTenantConfigCancel.bind(this);
         this.handleTenantConfigSave = this.handleTenantConfigSave.bind(this);
+        this.hideUIAlert=this.hideUIAlert.bind(this);
+    }
+    hideUIAlert(){
+        this.setState({
+            showAlert: !this.state.showAlert
+        });
+    }
+    showAlert(ashow,aheader,abody){
+        this.setState({
+            showAlert: ashow,
+            aheader:aheader,
+            abody:abody
+        });
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.linkdata && nextProps.linkdata.linked) {
@@ -50,8 +66,12 @@ class AccountsComponent extends React.Component {
             accountsAPI.getSSOConfigs().then(response => response).then((ssoconfigs) => {
                 console.log('ssoconfigs');
                 console.log(ssoconfigs);
-                this.setState({ssoconfigs:ssoconfigs});
-                this.handleShowLinkTenantToConfig(data);
+                if(ssoconfigs && ssoconfigs.length > 0){
+                    this.setState({ssoconfigs:ssoconfigs});
+                    this.handleShowLinkTenantToConfig(data);
+                }else{
+                    this.showAlert(true,'Alert','Please add SSO Configuration using "Manage SSO Config" before you link one.');
+                }
                 return ssoconfigs
             });
         }else if(nextProps.unlinkdata && nextProps.unlinkdata.unlinked){
@@ -115,6 +135,15 @@ class AccountsComponent extends React.Component {
         console.log('handleShowLinkTenantToConfig');
         console.log(rowdata);
     }
+    handleShowAlertAddTenantToConfig(rowdata) {        
+        this.setState({
+            showAlertAddTenantToConfig: true,
+            title: ' ',
+            linkrow:rowdata
+        })
+        console.log('handleShowLinkTenantToConfig');
+        console.log(rowdata);
+    }
     renderAccountsUI(accounts){
         if(accounts){
             let dataAdapter = new $.jqx.dataAdapter(this.state.source);
@@ -123,9 +152,8 @@ class AccountsComponent extends React.Component {
             { text: 'Account', datafield: 'acctName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Product', datafield: 'prodName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Dataset', datafield: 'dataset',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Enabled', datafield: 'enabled',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Linked Config', datafield: 'ssoConfDsplName',  cellsalign: 'center', width: 'auto', align: 'center'},
-            { text: 'Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
+            { text: 'Config', cellsalign: 'center', align: 'center', filterable: false, cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 if(rowdata.ssoConfDsplName){
                     return `<a href="#" title="${'Un-Link'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem;" class="btn btn-link align-self-center" onClick={onUnLinkConfig('${ndex}')}>${'Un-Link'}</button></div></a>`;
                 }else{
@@ -134,6 +162,8 @@ class AccountsComponent extends React.Component {
                }
             },
             ];
+            
+            let uiAlert    =   <UIAlert handleClick={this.hideUIAlert}  showAlert={this.state.showAlert} aheader={this.state.aheader} abody={this.state.abody} abtnlbl={'Ok'}/>;
             return(
                 <div class="row h-100 justify-content-center align-items-center">
                     <Container>
@@ -146,12 +176,13 @@ class AccountsComponent extends React.Component {
                             width={'100%'} source={dataAdapter} pageable={true} pagermode ={'simple'}
                             sortable={false} altrows={false} enabletooltips={false}
                             autoheight={true} editable={false} columns={columns}
-                            filterable={false} showfilterrow={false}
+                            filterable={true} showfilterrow={true}
                             selectionmode={'multiplerowsextended'}/>
                         </Col>
                         </Row>
                     </Container>
                     {this.state.showLinkTenantToConfig ? (<LinkConfigToTenant handleSave={this.handleTenantConfigSave} handleCancel={this.handleTenantConfigCancel}  showLinkTenantToConfig={this.state.showLinkTenantToConfig} linkrow={this.state.linkrow} ssoconfigs={this.state.ssoconfigs}/> ) : null}
+                    {uiAlert}
                 </div>
             );
         }else{
