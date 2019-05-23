@@ -135,7 +135,7 @@ class AddSSOConfig extends React.Component {
             console.log('ssoConfigProps');
             console.log(ssoConfigProps);
             this.props.actions.updateSSOConfig(ssoConfigProps).then(response => {
-                this.props.handleSave();
+                this.props.handleSave(response);
                 return response
             }).catch(error => {
                 console.log('Error Occured In Sync onAddSSOConfig.');

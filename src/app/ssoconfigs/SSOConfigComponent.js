@@ -6,7 +6,7 @@ import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
 import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
 import * as svcs from '../../base/constants/ServiceUrls';
 import URLUtils from '../../base/utils/urlUtils';
-import {addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig,updateSSOConfig}  from './ssoConfigsAction';
+import {addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig,updateSSOConfig,getSSOConfigs}  from './ssoConfigsAction';
 import {divStylePA} from '../../base/constants/AppConstants';
 import AddSSOConfig from './AddSSOConfig';
 import TestSsoIdp from './TestSsoIdp';
@@ -92,7 +92,7 @@ class SSOConfigComponent extends React.Component {
     }
     handleShowModifyConfig(rowdata) {        
         console.log(rowdata);
-        rowdata = {  
+        /*rowdata = {  
             "id":1,
             "acctName":"Walmart",
             "dsplName":"TestConfig",
@@ -119,7 +119,7 @@ class SSOConfigComponent extends React.Component {
 
             "expireRequestSecs":100,
             "enabled":true
-         }
+         }*/
 
         this.setState({
             openAddSSOConfig: true,
@@ -138,9 +138,14 @@ class SSOConfigComponent extends React.Component {
         console.log('rowdata');
         console.log(rowdata);
     }
-    handleSSOConfigSave() {
+    handleSSOConfigSave(props) {
         this.setState({openAddSSOConfig:false});
-        alert('save/updated')
+        this.props.actions.getSSOConfigs().then(() => {
+            if(this.props.ssoconfigsdata){
+                this.state.source.localdata =this.props.ssoconfigsdata; 
+                this.refs.manageConfigsGrid.updatebounddata('data');
+            }
+        });
     }
     renderSSOConfigUI(ssoconfigsdata){
         if(ssoconfigsdata){
@@ -222,6 +227,6 @@ function mapStateToProps(state) {
     }
 }
 function mapDispatchToProps(dispatch) {
-    return { actions: bindActionCreators({addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig,updateSSOConfig}, dispatch) }
+    return { actions: bindActionCreators({addSSOConfig,loadModifyConfig,loadTestSsoIdp,deleteSSOConfig,updateSSOConfig,getSSOConfigs}, dispatch) }
  }
 export default connect(mapStateToProps,mapDispatchToProps, null, { withRef: true })(SSOConfigComponent);

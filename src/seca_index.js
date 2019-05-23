@@ -14,7 +14,7 @@ import SSOConfigComponent from './app/ssoconfigs/SSOConfigComponent';
 import {getSyncInfo,getAdminTenants}  from './app/admin/adminAction';
 import {loadLinkConfig,loadUnLinkConfig,getTenantAccounts}  from './app/accounts/accountsAction';
 import {getAuditLogs}  from './app/auditlogs/auditLogsAction';
-import {getSSOConfigsByTenant,loadModifyConfig,loadTestSsoIdp}  from './app/ssoconfigs/ssoConfigsAction';
+import {getSSOConfigs,loadModifyConfig,loadTestSsoIdp}  from './app/ssoconfigs/ssoConfigsAction';
 
 let store = configureStore();
 
@@ -64,7 +64,7 @@ function renderSecAdmApplication(elem, renderName) {
         });
     }else if(renderName==rname.RN_SSO_CONFIGS){
        store.dispatch(getTenantAccounts(true));
-       store.dispatch(getSSOConfigsByTenant()).then((result) => {
+       store.dispatch(getSSOConfigs()).then((result) => {
             renderManageConfigsData(elem);
             //setTimeout(function() {    
             //    renderAdminData(elem);
@@ -253,6 +253,7 @@ const checkIfAreasDefined = (areas) => {
 };
 
 const renderWelcomePage = (elem) => {
+    //renderSecAdmApplication(elem,rname.RN_ACCOUNTS);
     document.getElementById(elem).innerHTML = "<h3>Welcome to the Security Administration Application Page. Please click on the links to perform different administrative activities for the applications.</h3>";
 };
 

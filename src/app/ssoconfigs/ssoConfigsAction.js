@@ -6,7 +6,7 @@ import {generateAppErrorEvent} from '../../base/utils/AppErrorEvent';
  * adminAction
  * @author Vinit
  */
-export function getSSOConfigsByTenant() {
+export function getSSOConfigs() {
     return function (dispatch, getState) {
         const state = getState();
         return accountsAPI.getSSOConfigs().then(ssoconfigsdata => {

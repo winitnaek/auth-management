@@ -9,20 +9,20 @@
     "renderFunction": "renderSecAdmApplication",
     "macVersion":"1.0", 
     "areas": [ {
-        "id":"b55f51a1-0273-4457-8226-013a35d32080",
-        "groupId":"Group1", 
-        "title": "Admin",
-        "icon": "fas fa-user-secret fa-sm",
-        "tooltip": "Admin",
-        "renderName": "administration",
-        "visible": true
-    }, {
         "id":"e3893613-ae29-4243-a004-370512da544f",
         "groupId":"Group1", 
         "title": "Accounts",
         "icon": "fas fa-users fa-sm",
         "tooltip": "Accounts",
         "renderName": "accounts",
+        "visible": true
+    }, {
+        "id":"b55f51a1-0273-4457-8226-013a35d32080",
+        "groupId":"Group1", 
+        "title": "Admin",
+        "icon": "fas fa-user-secret fa-sm",
+        "tooltip": "Admin",
+        "renderName": "administration",
         "visible": true
     },{
         "id":"270a5c1f-14d3-4087-a196-d93a908b7cd4",
