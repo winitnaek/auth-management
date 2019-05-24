@@ -91,32 +91,30 @@ class AddSSOConfig extends React.Component {
         }
     } 
     toggleUIConfirmSave() {
-        if(this.state.modeisnew){
-            //Currently all the fields are required.
-
-            let ssoConfigProps = {  
-                "id":1,//Service needs to be update to handle null id. DTO should not need not null id
-                "acctName": this.state.selectedAccount.label,
-                "dsplName": this.dsplName.value,
-                "idpIssuer":this.idpIssuer.value,
-                "idpReqURL":this.idpReqURL.value,
-                "spConsumerURL":this.spConsumerURL.value,
-                "spIssuer":this.spIssuer.value,
-                "attribIndex":this.attribIndex.value,
-                "validateRespSignature":this.validateRespSignature.checked,
-                "validateIdpIssuer":this.validateIdpIssuer.checked,
-                "allowLogout":this.allowLogout.checked,
-                "redirectToApplication":this.redirectToApplication.checked,
-                "nonSamlLogoutURL":this.nonSamlLogoutURL.value,
-                "appRedirectURL": this.appRedirectURL.value,
-                "certAlias":this.certAlias.value,
-                "certPassword":this.certPassword.value,
-                "certText":this.certText.value,
-                "expireRequestSecs":this.expireRequestSecs.value,
-                "enabled": this.enabled.checked 
-            }
-
-            if(this.validateSSOConfig()){
+        if(this.validateSSOConfig()){
+            if(this.state.modeisnew){
+                //Currently all the fields are required.
+                let ssoConfigProps = {  
+                    "id":1,//Service needs to be update to handle null id. DTO should not need not null id
+                    "acctName": this.state.selectedAccount.label,
+                    "dsplName": this.dsplName.value,
+                    "idpIssuer":this.idpIssuer.value,
+                    "idpReqURL":this.idpReqURL.value,
+                    "spConsumerURL":this.spConsumerURL.value,
+                    "spIssuer":this.spIssuer.value,
+                    "attribIndex":this.attribIndex.value,
+                    "validateRespSignature":this.validateRespSignature.checked,
+                    "validateIdpIssuer":this.validateIdpIssuer.checked,
+                    "allowLogout":this.allowLogout.checked,
+                    "redirectToApplication":this.redirectToApplication.checked,
+                    "nonSamlLogoutURL":this.nonSamlLogoutURL.value,
+                    "appRedirectURL": this.appRedirectURL.value,
+                    "certAlias":this.certAlias.value,
+                    "certPassword":this.certPassword.value,
+                    "certText":this.certText.value,
+                    "expireRequestSecs":this.expireRequestSecs.value,
+                    "enabled": this.enabled.checked 
+                }
                 console.log('ssoConfigProps - save');
                 console.log(ssoConfigProps);
                 this.props.actions.addSSOConfig(ssoConfigProps).then(response => {
@@ -126,40 +124,39 @@ class AddSSOConfig extends React.Component {
                     console.log('Error Occured In Sync onAddSSOConfig.');
                     console.log(error);
                 });
+            }else{
+                let ssoConfigProps = {  
+                    "id":this.state.rowdata.id,
+                    "acctName": this.state.selectedAccount.label,
+                    "dsplName": this.dsplName.value,
+                    "idpIssuer":this.idpIssuer.value,
+                    "idpReqURL":this.idpReqURL.value,
+                    "spConsumerURL":this.spConsumerURL.value,
+                    "spIssuer":this.spIssuer.value,
+                    "attribIndex":this.attribIndex.value,
+                    "validateRespSignature":this.validateRespSignature.checked,
+                    "validateIdpIssuer":this.validateIdpIssuer.checked,
+                    "allowLogout":this.allowLogout.checked,
+                    "redirectToApplication":this.redirectToApplication.checked,
+                    "nonSamlLogoutURL":this.nonSamlLogoutURL.value,
+                    "appRedirectURL": this.appRedirectURL.value,
+                    "certAlias":this.certAlias.value,
+                    "certPassword":this.certPassword.value,
+                    "certText":this.certText.value,
+                    "expireRequestSecs":this.expireRequestSecs.value,
+                    "enabled": this.enabled.checked 
+                }
+                console.log('ssoConfigProps - update');
+                console.log(ssoConfigProps);
+                this.props.actions.updateSSOConfig(ssoConfigProps).then(response => {
+                    this.props.handleSave(response);
+                    return response
+                }).catch(error => {
+                    console.log('Error Occured In Sync onAddSSOConfig.');
+                    console.log(error);
+                });
             }
-        }else{
-            let ssoConfigProps = {  
-                "id":this.state.rowdata.id,
-                "acctName": this.state.selectedAccount.label,
-                "dsplName": this.dsplName.value,
-                "idpIssuer":this.idpIssuer.value,
-                "idpReqURL":this.idpReqURL.value,
-                "spConsumerURL":this.spConsumerURL.value,
-                "spIssuer":this.spIssuer.value,
-                "attribIndex":this.attribIndex.value,
-                "validateRespSignature":this.validateRespSignature.checked,
-                "validateIdpIssuer":this.validateIdpIssuer.checked,
-                "allowLogout":this.allowLogout.checked,
-                "redirectToApplication":this.redirectToApplication.checked,
-                "nonSamlLogoutURL":this.nonSamlLogoutURL.value,
-                "appRedirectURL": this.appRedirectURL.value,
-                "certAlias":this.certAlias.value,
-                "certPassword":this.certPassword.value,
-                "certText":this.certText.value,
-                "expireRequestSecs":this.expireRequestSecs.value,
-                "enabled": this.enabled.checked 
-             }
-            console.log('ssoConfigProps - update');
-            console.log(ssoConfigProps);
-            this.props.actions.updateSSOConfig(ssoConfigProps).then(response => {
-                this.props.handleSave(response);
-                return response
-            }).catch(error => {
-                console.log('Error Occured In Sync onAddSSOConfig.');
-                console.log(error);
-            });
         }
-        
     }
     validateSSOConfig(){
         let isValidConfig = true;
@@ -168,67 +165,69 @@ class AddSSOConfig extends React.Component {
         console.log(selectedEmp);
         if(!selectedEmp){
             this.setState({selectreqstate:this.state.selectrequired,selectfeestate:this.state.selectfeedback});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
             this.setState({selectreqstate:'',selectfeestate:''});
             isValidConfig = true;
         }
         if(!this.dsplName.value){
             this.setState({dsplNamestate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
             this.setState({dsplNamestate:false});
             isValidConfig = true;
         }
         if(!this.idpIssuer.value){
             this.setState({idpIssuerstate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
-             this.setState({idpIssuerstate:false});
+            this.setState({idpIssuerstate:false});
             isValidConfig = true;
         }
         if(!this.idpReqURL.value){
             this.setState({idpReqURLstate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
-             this.setState({idpReqURLstate:false});
+            this.setState({idpReqURLstate:false});
             isValidConfig = true;
         }
         if(!this.spIssuer.value){
             this.setState({spIssuerstate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
-             this.setState({spIssuerstate:false});
+            this.setState({spIssuerstate:false});
             isValidConfig = true;
         }
         if(!this.appRedirectURL.value){
             this.setState({appRedirectURLstate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
-             this.setState({appRedirectURLstate:false});
+            this.setState({appRedirectURLstate:false});
             isValidConfig = true;
         }
         if(!this.certAlias.value){
             this.setState({certAliasstate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
              this.setState({certAliasstate:false});
             isValidConfig = true;
         }
         if(!this.certPassword.value){
             this.setState({certPasswordstate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
-             this.setState({certPasswordstate:false});
+            this.setState({certPasswordstate:false});
             isValidConfig = true;
         }
         if(!this.certText.value){
             this.setState({certTextstate:true});
-            isValidConfig = false;
+            return isValidConfig = false;
         }else{
-             this.setState({certTextstate:false});
+            this.setState({certTextstate:false});
             isValidConfig = true;
         }
+        console.log('isValidConfig');
+        console.log(isValidConfig);
         return isValidConfig;
     }
     dsplNameChange(e){
