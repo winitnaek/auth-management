@@ -169,7 +169,7 @@ class SSOConfigComponent extends React.Component {
             let columns =
             [
             { text: 'Config', datafield: 'dsplName',  cellsalign: 'center', width: 'auto', align: 'center'},    
-            { text: 'Linked To', datafield: 'acctName',  cellsalign: 'center', width: 'auto', align: 'center'},
+            { text: 'Account', datafield: 'acctName',  cellsalign: 'center', width: 'auto', align: 'center'},
             { text: 'Modify', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onModifyConfig('${ndex}')}>${'Modify '+rowdata.dsplName}</button></div></a>`;}
             },
