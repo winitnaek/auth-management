@@ -9,7 +9,15 @@ body {
 	white-space: normal;
 	margin-left: 10px;
 }
-
+.selectrequired {
+	box-shadow: 0px 0px 1px#dc3545;
+}
+.selectfeedback{
+		width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}		
 .pb-1, .py-1, .pb-2, .py-2 {
     display: inline-table;
 	margin-right: 10px;
@@ -229,5 +237,6 @@ option {
 
 	#sidebar-toggler {
 		display: none;
-	}	
+	}
+
 }

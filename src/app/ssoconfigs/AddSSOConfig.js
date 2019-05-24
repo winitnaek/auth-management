@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Col, Input,CustomInput} from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Col, Input,CustomInput,FormFeedback} from 'reactstrap';
 import Select from 'react-select';
+
 class AddSSOConfig extends React.Component {
     constructor(props) {
         super(props);
@@ -29,21 +30,36 @@ class AddSSOConfig extends React.Component {
             accounts:accounts,
             selectedAccount:selectedAccount,
             rowdata:rowdata,
-            modeisnew:modeisnew
+            modeisnew:modeisnew,
+            disablesavecfg:false,
+            dsplNamestate:false,
+            selectreqstate:'',
+            selectfeestate:'',
+            selectrequired:'selectrequired',
+            selectfeedback:'selectfeedback',
+            idpIssuerstate:false,
+            idpReqURLstate:false,
+            spIssuerstate:false,
+            certTextstate:false,
+            certPasswordstate:false,
+            certAliasstate:false,
+            appRedirectURLstate:false
         };
         this.toggleUIConfirmSave = this.toggleUIConfirmSave.bind(this);
         this.toggleUIConfirmCancel = this.toggleUIConfirmCancel.bind(this);
         this.handleAccountChange = this.handleAccountChange.bind(this);
         this.handleProductChange = this.handleProductChange.bind(this);
+        this.validateSSOConfig   = this.validateSSOConfig.bind(this);
+        this.dsplNameChange      = this.dsplNameChange.bind(this);
+        this.idpIssuerChange      = this.idpIssuerChange.bind(this);
+        this.idpReqURLChange      = this.idpReqURLChange.bind(this);
+        this.spIssuerChange      = this.spIssuerChange.bind(this);
+        this.certTextChanged     = this.certTextChanged.bind(this);
+        this.certPasswordChanged = this.certPasswordChanged.bind(this);
+        this.certAliasChanged    = this.certAliasChanged.bind(this);
+        this.appRedirectUrlChanged= this.appRedirectUrlChanged.bind(this);
     }
-    handleAccountChange(selectedAccount){
-        console.log('selectedAccount');
-        console.log(selectedAccount);
-        this.setState({ selectedAccount});
-        let account = `${selectedAccount.value}`;
-        console.log('account');
-        console.log(account);
-    }
+   
     handleProductChange(selectedProduct){
         console.log('selectedProduct');
         console.log(selectedProduct);
@@ -54,7 +70,7 @@ class AddSSOConfig extends React.Component {
     }
     componentDidMount(){
         if(!this.state.modeisnew){
-            const {appRedirectURL,nonSamlLogoutURL, enabled, dsplName, idpIssuer, idpReqURL, spConsumerURL, spIssuer, attribIndex, validateRespSignature, validateIdpIssuer, signRequests, allowLogout,redirectToApplication,expireRequestSecs,certAlias,certPassword,certText} = this.state.rowdata;
+            const {appRedirectURL,nonSamlLogoutURL, enabled, dsplName, idpIssuer, idpReqURL, spConsumerURL, spIssuer, attribIndex, validateRespSignature, validateIdpIssuer, allowLogout,redirectToApplication,expireRequestSecs,certAlias,certPassword,certText} = this.state.rowdata;
             this.dsplName.value=dsplName;
             this.idpIssuer.value=idpIssuer;
             this.idpReqURL.value = idpReqURL;
@@ -63,7 +79,6 @@ class AddSSOConfig extends React.Component {
             this.attribIndex.value= attribIndex;
             this.validateRespSignature.checked= validateRespSignature;
             this.validateIdpIssuer.checked= validateIdpIssuer;
-            this.signRequests.checked =signRequests;
             this.allowLogout.checked =allowLogout;
             this.redirectToApplication.checked =redirectToApplication;
             this.nonSamlLogoutURL.value=nonSamlLogoutURL;
@@ -78,6 +93,7 @@ class AddSSOConfig extends React.Component {
     toggleUIConfirmSave() {
         if(this.state.modeisnew){
             //Currently all the fields are required.
+
             let ssoConfigProps = {  
                 "id":1,//Service needs to be update to handle null id. DTO should not need not null id
                 "acctName": this.state.selectedAccount.label,
@@ -89,7 +105,6 @@ class AddSSOConfig extends React.Component {
                 "attribIndex":this.attribIndex.value,
                 "validateRespSignature":this.validateRespSignature.checked,
                 "validateIdpIssuer":this.validateIdpIssuer.checked,
-                "signRequests":this.signRequests.checked,
                 "allowLogout":this.allowLogout.checked,
                 "redirectToApplication":this.redirectToApplication.checked,
                 "nonSamlLogoutURL":this.nonSamlLogoutURL.value,
@@ -99,16 +114,19 @@ class AddSSOConfig extends React.Component {
                 "certText":this.certText.value,
                 "expireRequestSecs":this.expireRequestSecs.value,
                 "enabled": this.enabled.checked 
-             }
-            console.log('ssoConfigProps');
-            console.log(ssoConfigProps);
-            this.props.actions.addSSOConfig(ssoConfigProps).then(response => {
-                this.props.handleSave();
-                return response
-            }).catch(error => {
-                console.log('Error Occured In Sync onAddSSOConfig.');
-                console.log(error);
-            });
+            }
+
+            if(this.validateSSOConfig()){
+                console.log('ssoConfigProps - save');
+                console.log(ssoConfigProps);
+                this.props.actions.addSSOConfig(ssoConfigProps).then(response => {
+                    this.props.handleSave();
+                    return response
+                }).catch(error => {
+                    console.log('Error Occured In Sync onAddSSOConfig.');
+                    console.log(error);
+                });
+            }
         }else{
             let ssoConfigProps = {  
                 "id":this.state.rowdata.id,
@@ -121,7 +139,6 @@ class AddSSOConfig extends React.Component {
                 "attribIndex":this.attribIndex.value,
                 "validateRespSignature":this.validateRespSignature.checked,
                 "validateIdpIssuer":this.validateIdpIssuer.checked,
-                "signRequests":this.signRequests.checked,
                 "allowLogout":this.allowLogout.checked,
                 "redirectToApplication":this.redirectToApplication.checked,
                 "nonSamlLogoutURL":this.nonSamlLogoutURL.value,
@@ -132,7 +149,7 @@ class AddSSOConfig extends React.Component {
                 "expireRequestSecs":this.expireRequestSecs.value,
                 "enabled": this.enabled.checked 
              }
-            console.log('ssoConfigProps');
+            console.log('ssoConfigProps - update');
             console.log(ssoConfigProps);
             this.props.actions.updateSSOConfig(ssoConfigProps).then(response => {
                 this.props.handleSave(response);
@@ -144,12 +161,112 @@ class AddSSOConfig extends React.Component {
         }
         
     }
+    validateSSOConfig(){
+        let isValidConfig = true;
+        var selectedEmp = this.state.selectedAccount;
+        console.log('selectedEmp');
+        console.log(selectedEmp);
+        if(!selectedEmp){
+            this.setState({selectreqstate:this.state.selectrequired,selectfeestate:this.state.selectfeedback});
+            isValidConfig = false;
+        }else{
+            this.setState({selectreqstate:'',selectfeestate:''});
+            isValidConfig = true;
+        }
+        if(!this.dsplName.value){
+            this.setState({dsplNamestate:true});
+            isValidConfig = false;
+        }else{
+            this.setState({dsplNamestate:false});
+            isValidConfig = true;
+        }
+        if(!this.idpIssuer.value){
+            this.setState({idpIssuerstate:true});
+            isValidConfig = false;
+        }else{
+             this.setState({idpIssuerstate:false});
+            isValidConfig = true;
+        }
+        if(!this.idpReqURL.value){
+            this.setState({idpReqURLstate:true});
+            isValidConfig = false;
+        }else{
+             this.setState({idpReqURLstate:false});
+            isValidConfig = true;
+        }
+        if(!this.spIssuer.value){
+            this.setState({spIssuerstate:true});
+            isValidConfig = false;
+        }else{
+             this.setState({spIssuerstate:false});
+            isValidConfig = true;
+        }
+        if(!this.appRedirectURL.value){
+            this.setState({appRedirectURLstate:true});
+            isValidConfig = false;
+        }else{
+             this.setState({appRedirectURLstate:false});
+            isValidConfig = true;
+        }
+        if(!this.certAlias.value){
+            this.setState({certAliasstate:true});
+            isValidConfig = false;
+        }else{
+             this.setState({certAliasstate:false});
+            isValidConfig = true;
+        }
+        if(!this.certPassword.value){
+            this.setState({certPasswordstate:true});
+            isValidConfig = false;
+        }else{
+             this.setState({certPasswordstate:false});
+            isValidConfig = true;
+        }
+        if(!this.certText.value){
+            this.setState({certTextstate:true});
+            isValidConfig = false;
+        }else{
+             this.setState({certTextstate:false});
+            isValidConfig = true;
+        }
+        return isValidConfig;
+    }
+    dsplNameChange(e){
+        this.validateSSOConfig();
+    }
+    handleAccountChange(selectedAccount){
+        this.setState({ selectedAccount});
+        let account = `${selectedAccount.value}`;
+        if(account){
+            this.setState({selectreqstate:'',selectfeestate:''});
+        }
+    } 
+    idpIssuerChange(e){
+        this.validateSSOConfig();
+    }
+    spIssuerChange(e){
+        this.validateSSOConfig();
+    }
+    idpReqURLChange(e){
+        this.validateSSOConfig();
+    }
+    certTextChanged(e){
+        this.validateSSOConfig();
+    }
+    certPasswordChanged(e){
+        this.validateSSOConfig();
+    }
+    certAliasChanged(e){
+        this.validateSSOConfig();
+    }
+    appRedirectUrlChanged(e){
+        this.validateSSOConfig();
+    }
     toggleUIConfirmCancel() {
         this.props.handleCancel();
     }
     render() {
-        const {enabled, validateRespSignature, validateIdpIssuer, signRequests, allowLogout,redirectToApplication} = this.state.rowdata;
-
+        const {enabled, validateRespSignature, validateIdpIssuer, allowLogout,redirectToApplication} = this.state.rowdata;
         return (
             <div>
                 <Modal isOpen={this.props.showAddAccount} style={{ 'max-width': window.innerWidth-200}} toggle={this.toggle} backdrop="static" size="lg">
@@ -169,22 +286,27 @@ class AddSSOConfig extends React.Component {
                                         isMulti={false}
                                         options={this.state.accounts}
                                         isLoading={this.state.isCompLoading}
+                                       className={this.state.selectreqstate}
                                     />
+                                 {this.state.selectfeestate.length > 10 ? (<div className={this.state.selectfeestate}>Required</div>):null}
                                 </Col>
                                 <Label sm={1}>Config Name</Label>
                                 <Col sm={4} style={{ zIndex: 100 }}>
-                                <Input type="text" id="dsplNamex" name="dsplNamex" innerRef={(input) => this.dsplName = input}  placeholder="Enter Config Name" />
+                                <Input type="text" invalid={this.state.dsplNamestate} onChange={this.dsplNameChange} id="dsplNamex" name="dsplNamex" innerRef={(input) => this.dsplName = input}  placeholder="Enter Config Name" />
+                                <FormFeedback invalid={this.state.dsplNamestate}>Required</FormFeedback>
                                  </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
                                 <Label sm={1}></Label>
                                 <Label sm={1}>idpIssuer</Label>
                                 <Col sm={4}>
-                                    <Input type="text" name="idpIssuer" innerRef={(input) => this.idpIssuer = input}  placeholder="Enter idpIssuer" />
+                                    <Input type="text"  invalid={this.state.idpIssuerstate} onChange={this.idpIssuerChange} name="idpIssuer" innerRef={(input) => this.idpIssuer = input}  placeholder="Enter idpIssuer" />
+                                    <FormFeedback invalid={this.state.idpIssuerstate}>Required</FormFeedback>
                                 </Col>
                                 <Label sm={1}>idpReqURL</Label>
                                 <Col sm={4}>
-                                    <Input type="text" name="idpReqURL" innerRef={(input) => this.idpReqURL = input}  id="idpReqURL" placeholder="Enter idpReqURL" />
+                                    <Input type="text" name="idpReqURL" invalid={this.state.idpReqURLstate} onChange={this.idpReqURLChange} innerRef={(input) => this.idpReqURL = input}  id="idpReqURL" placeholder="Enter idpReqURL" />
+                                    <FormFeedback invalid={this.state.idpReqURLstate}>Required</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
@@ -195,35 +317,33 @@ class AddSSOConfig extends React.Component {
                                 </Col>
                                 <Label sm={1}>spIssuer</Label>
                                 <Col sm={4}>
-                                    <Input type="text" name="spIssuer" id="spIssuer" innerRef={(input) => this.spIssuer = input} placeholder="Enter spIssuer" />
+                                    <Input type="text" name="spIssuer" invalid={this.state.spIssuerstate}  onChange={this.spIssuerChange}  id="spIssuer" innerRef={(input) => this.spIssuer = input} placeholder="Enter spIssuer" />
+                                    <FormFeedback invalid={this.state.spIssuerstate}>Required</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
                                 <Label sm={1}></Label>
                                 <Label sm={1}>attribIndex</Label>
                                 <Col sm={4}>
-                                    <Input type="number" name="attribIndex"  innerRef={(input) => this.attribIndex = input}  placeholder="Enter attribIndex" />
+                                    <Input type="number" name="attribIndex"  innerRef={(input) => this.attribIndex = input} defaultValue={99}  placeholder="Enter attribIndex" />
                                 </Col>
-                                <Label sm={1}></Label>
-                                <Col sm={2}>
-                                <CustomInput type="switch" innerRef={(input) => this.validateRespSignature = input} onChange={this.validateRespSignatureChanged} defaultChecked={validateRespSignature} id="validateRespSignature" name="validateRespSignature" label="validateRespSignature"/>
-                                </Col>
-                                <Col sm={2}>
-                                <CustomInput type="switch" innerRef={(input) => this.validateIdpIssuer = input} onChange={this.validateIdpIssuerChanged} defaultChecked={validateIdpIssuer} id="validateIdpIssuer" name="validateIdpIssuer" label="validateIdpIssuer"/>
-                                </Col>
+                               
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
                                 <Label sm={1}></Label>
                                 <Label sm={1}></Label>
                                 <Col sm={2}>
-                                <CustomInput type="switch" innerRef={(input) => this.signRequests = input} onChange={this.signRequestsChanged} defaultChecked={signRequests} name="signRequests" id="signRequests" label="signRequests"/>
+                                <CustomInput type="switch" innerRef={(input) => this.redirectToApplication = input} onChange={this.redirectToApplicationChanged} defaultChecked={redirectToApplication} name="redirectToApplication" id="redirectToApplication" label="redirectToApplication"/>
                                 </Col>
                                 <Col sm={2}>
                                 <CustomInput type="switch" innerRef={(input) => this.allowLogout = input} onChange={this.allowLogoutChanged} defaultChecked={allowLogout} name="allowLogout" id="allowLogout" label="allowLogout"/>
                                 </Col>
                                 <Label sm={1}></Label>
                                 <Col sm={2}>
-                                <CustomInput type="switch" innerRef={(input) => this.redirectToApplication = input} onChange={this.redirectToApplicationChanged} defaultChecked={redirectToApplication} name="redirectToApplication" id="redirectToApplication" label="redirectToApplication"/>
+                                <CustomInput type="switch" innerRef={(input) => this.validateRespSignature = input} onChange={this.validateRespSignatureChanged} defaultChecked={validateRespSignature} id="validateRespSignature" name="validateRespSignature" label="validateRespSignature"/>
+                                </Col>
+                                <Col sm={2}>
+                                <CustomInput type="switch" innerRef={(input) => this.validateIdpIssuer = input} onChange={this.validateIdpIssuerChanged} defaultChecked={true} id="validateIdpIssuer" name="validateIdpIssuer" label="validateIdpIssuer"/>
                                 </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
@@ -234,32 +354,36 @@ class AddSSOConfig extends React.Component {
                                 </Col>
                                 <Label sm={1}>appRedirectURL</Label>
                                 <Col sm={4}>
-                                    <Input type="text" name="appRedirectURL"  innerRef={(input) => this.appRedirectURL = input} placeholder="Enter appRedirectURL" />
+                                    <Input type="text" name="appRedirectURL"  invalid={this.state.appRedirectURLstate} onChange={this.appRedirectUrlChanged}  innerRef={(input) => this.appRedirectURL = input} placeholder="Enter appRedirectURL" />
+                                    <FormFeedback invalid={this.state.appRedirectURLstate}>Required</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
                                 <Label sm={1}></Label>
                                 <Label sm={1}>certAlias</Label>
                                 <Col sm={4}>
-                                    <Input type="text" name="certAlias"  innerRef={(input) => this.certAlias = input} placeholder="Enter certAlias" />
+                                    <Input type="text" name="certAlias" invalid={this.state.certAliasstate} onChange={this.certAliasChanged}  innerRef={(input) => this.certAlias = input} placeholder="Enter certAlias" />
+                                    <FormFeedback invalid={this.state.certAliasstate}>Required</FormFeedback>
                                 </Col>
                                 <Label sm={1}>certPassword</Label>
                                 <Col sm={4}>
-                                    <Input type="text" name="certPassword" innerRef={(input) => this.certPassword = input} placeholder="Enter certPassword" />
+                                    <Input type="text" name="certPassword" invalid={this.state.certPasswordstate} onChange={this.certPasswordChanged}  innerRef={(input) => this.certPassword = input} placeholder="Enter certPassword" />
+                                    <FormFeedback invalid={this.state.certPasswordstate}>Required</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
                                 <Label sm={1}></Label>
                                 <Label sm={1}>certText</Label>
                                 <Col sm={9}>
-                                    <Input type="textarea" name="certText" innerRef={(input) => this.certText = input} placeholder="Enter certText" />
+                                    <Input type="textarea" name="certText" invalid={this.state.certTextstate} onChange={this.certTextChanged}    innerRef={(input) => this.certText = input} placeholder="Enter certText" />
+                                    <FormFeedback invalid={this.state.certTextstate}>Required</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
                                 <Label sm={1}></Label>
                                 <Label sm={1}>expireRequestSecs</Label>
                                 <Col sm={4}>
-                                    <Input type="number" name="expireRequestSecs"  innerRef={(input) => this.expireRequestSecs = input}  min={10} max={60}  placeholder="Enter expireRequestSecs" />
+                                    <Input type="number" name="expireRequestSecs"  innerRef={(input) => this.expireRequestSecs = input}  min={10} max={60}  defaultValue={25}  placeholder="Enter expireRequestSecs" />
                                 </Col>
                                 <Label sm={1}></Label>
                                 <Col sm={2}>
@@ -270,7 +394,7 @@ class AddSSOConfig extends React.Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="secondary" className="btn btn-primary mr-auto" onClick={this.toggleUIConfirmCancel}>Cancel</Button>
-                        <Button onClick={() => this.toggleUIConfirmSave()} color="success">Save</Button>{' '}
+                        <Button disabled={this.state.disablesavecfg} onClick={() => this.toggleUIConfirmSave()} color="success">Save</Button>{' '}
                     </ModalFooter>
                 </Modal>
             </div>
