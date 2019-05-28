@@ -43,21 +43,24 @@ class AddSSOConfig extends React.Component {
             certTextstate:false,
             certPasswordstate:false,
             certAliasstate:false,
-            appRedirectURLstate:false
+            appRedirectURLstate:false,
+            certErrorLable:''
         };
-        this.toggleUIConfirmSave = this.toggleUIConfirmSave.bind(this);
-        this.toggleUIConfirmCancel = this.toggleUIConfirmCancel.bind(this);
-        this.handleAccountChange = this.handleAccountChange.bind(this);
-        this.handleProductChange = this.handleProductChange.bind(this);
-        this.validateSSOConfig   = this.validateSSOConfig.bind(this);
-        this.dsplNameChange      = this.dsplNameChange.bind(this);
+        this.toggleUIConfirmSave  = this.toggleUIConfirmSave.bind(this);
+        this.toggleUIConfirmCancel= this.toggleUIConfirmCancel.bind(this);
+        this.handleAccountChange  = this.handleAccountChange.bind(this);
+        this.handleProductChange  = this.handleProductChange.bind(this);
+        this.validateSSOConfig    = this.validateSSOConfig.bind(this);
+        this.dsplNameChange       = this.dsplNameChange.bind(this);
         this.idpIssuerChange      = this.idpIssuerChange.bind(this);
         this.idpReqURLChange      = this.idpReqURLChange.bind(this);
-        this.spIssuerChange      = this.spIssuerChange.bind(this);
-        this.certTextChanged     = this.certTextChanged.bind(this);
-        this.certPasswordChanged = this.certPasswordChanged.bind(this);
-        this.certAliasChanged    = this.certAliasChanged.bind(this);
+        this.spIssuerChange       = this.spIssuerChange.bind(this);
+        this.certTextChanged      = this.certTextChanged.bind(this);
+        this.certPasswordChanged  = this.certPasswordChanged.bind(this);
+        this.certAliasChanged     = this.certAliasChanged.bind(this);
         this.appRedirectUrlChanged= this.appRedirectUrlChanged.bind(this);
+        this.validateCert         = this.validateCert.bind(this);
+        
     }
    
     handleProductChange(selectedProduct){
@@ -209,7 +212,7 @@ class AddSSOConfig extends React.Component {
             this.setState({certAliasstate:true});
             return isValidConfig = false;
         }else{
-             this.setState({certAliasstate:false});
+            this.setState({certAliasstate:false});
             isValidConfig = true;
         }
         if(!this.certPassword.value){
@@ -220,15 +223,38 @@ class AddSSOConfig extends React.Component {
             isValidConfig = true;
         }
         if(!this.certText.value){
-            this.setState({certTextstate:true});
+            this.setState({certTextstate:true,certErrorLable:'Required'});
             return isValidConfig = false;
         }else{
-            this.setState({certTextstate:false});
-            isValidConfig = true;
+            if(!this.validateCert()){
+                this.setState({certTextstate:true,certErrorLable:'Invalid Certificate'});
+                console.log('Entered certificate PEM Text is invalid. >> Please provide valid certificate.');
+                return isValidConfig = false;
+            }else{
+                this.setState({certTextstate:false});
+                isValidConfig = true;
+            }
         }
         console.log('isValidConfig');
         console.log(isValidConfig);
         return isValidConfig;
+    }
+    validateCert(){
+        var iscertvalid = false;
+        let pki = require('node-forge').pki;
+        try {
+            let caCert = this.certText.value;
+            let cert = pki.certificateFromPem(caCert);
+            var isvalid = cert.verify(cert);
+            console.log('isvalid cert ==>')
+            console.log(isvalid);
+            iscertvalid =isvalid;
+        } catch (e) {
+           console.log(e);
+           console.log('Unable to validate Entered certificate PEM Text. >>');
+           return false;
+        }
+        return iscertvalid;
     }
     dsplNameChange(e){
         this.validateSSOConfig();
@@ -374,8 +400,8 @@ class AddSSOConfig extends React.Component {
                                 <Label sm={1}></Label>
                                 <Label sm={1}>certText</Label>
                                 <Col sm={9}>
-                                    <Input type="textarea" name="certText" invalid={this.state.certTextstate} onChange={this.certTextChanged}    innerRef={(input) => this.certText = input} placeholder="Enter certText" />
-                                    <FormFeedback invalid={this.state.certTextstate}>Required</FormFeedback>
+                                    <Input type="textarea" name="certText" invalid={this.state.certTextinvalid} invalid={this.state.certTextstate}  onChange={this.certTextChanged}    innerRef={(input) => this.certText = input} placeholder="Enter certText" />
+                                    <FormFeedback invalid={this.state.certTextstate}>{this.state.certErrorLable}</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row style={{marginBottom:8}}>
