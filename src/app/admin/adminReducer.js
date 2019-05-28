@@ -27,7 +27,7 @@ export default function adminReducer(state = initialState.admindata, action) {
             lastPerSync:state.lastPerSync,
             isPerSyncOn:action.enabled,
             isSyncInProgress:state.isSyncInProgress,
-            adminTenants: state.admindata.adminTenants
+            adminTenants: (state.admindata && state.admindata.adminTenants) ? state.admindata.adminTenants:[]
         });
     }
     default: 

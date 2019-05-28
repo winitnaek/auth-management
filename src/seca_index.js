@@ -40,7 +40,8 @@ function renderSecAdmApplication(elem, renderName) {
     setAppAnchor(elem);
     setAppDataset(dataset);
     if(renderName==rname.RN_ADMINISTRATION){
-        store.dispatch(getSyncInfo()).then(store.dispatch(getAdminTenants(false))).then((result) => {
+        store.dispatch(getSyncInfo())
+        store.dispatch(getAdminTenants(false)).then((result) => {
             renderAdminData(elem);
         }).catch((error) => {
             throw new SubmissionError({_error:  error });
