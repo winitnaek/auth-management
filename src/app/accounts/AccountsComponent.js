@@ -63,14 +63,14 @@ class AccountsComponent extends React.Component {
             }
             this.props.actions.loadLinkConfig(linkdata);
             let data = this.refs.accountsGrid.getrowdata(nextProps.linkdata.accountid);
-            accountsAPI.getSSOConfigs().then(response => response).then((ssoconfigs) => {
+            accountsAPI.getSSOConfigsByTenant(data.acctName).then(response => response).then((ssoconfigs) => {
                 console.log('ssoconfigs');
                 console.log(ssoconfigs);
                 if(ssoconfigs && ssoconfigs.length > 0){
                     this.setState({ssoconfigs:ssoconfigs});
                     this.handleShowLinkTenantToConfig(data);
                 }else{
-                    this.showAlert(true,'Alert','Please add SSO Configuration using "Manage SSO Config" before you link one.');
+                    this.showAlert(true,'Alert','Please add SSO Configuration for the Account using "Manage SSO Config" before you link one.');
                 }
                 return ssoconfigs
             });

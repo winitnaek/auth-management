@@ -61,5 +61,22 @@ class accountsAPI {
             return error;
         });
     }
+    static getSSOConfigsByTenant(accountName) {
+        let paramurl = `${'?accountName='}${accountName}`;
+        var svcs_url = `${svcs.GET_SSOCONFIGS_BYTENANTS}${paramurl}`;
+        return fetch(URLUtils.buildURL(svcs_url), {
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                var errorCode = response.status;
+                var errorMsg = 'Unable to Get SSO Configurations. ' + ADMIN_ERROR_MSG;
+                return new AppError(errorMsg, errorCode);
+            }
+        }).catch(error => {
+            return error;
+        });
+    }
 }
 export default accountsAPI;
