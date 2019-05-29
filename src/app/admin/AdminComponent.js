@@ -11,7 +11,7 @@ import {runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTena
 import {divStylePA} from '../../base/constants/AppConstants';
 
 import AdminDatasetsGrid from './AdminDatasetsGrid';
-const SYNCINFO_TIMER =20000;
+const SYNCINFO_TIMER =10000;
 class AdminComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -50,10 +50,12 @@ class AdminComponent extends React.Component {
     }
     runPeriodicDataSyncProc(){
         this.props.actions.runPeriodicDataSync(this.refs.lastPerSyncDt.val());
+        this.props.admindata.isSyncInProgress =true;
         this.setState({dsyncbtn:true});
     }
     runInitialDataSyncProc(){
         this.props.actions.runInitialDataSync();
+        this.props.admindata.isSyncInProgress =true;
         this.setState({dsyncbtn:true});
     }
     handleSyncInProgress(){

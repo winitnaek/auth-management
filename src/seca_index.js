@@ -15,6 +15,8 @@ import {getSyncInfo,getAdminTenants}  from './app/admin/adminAction';
 import {loadLinkConfig,loadUnLinkConfig,getTenantAccounts}  from './app/accounts/accountsAction';
 import {getAuditLogs}  from './app/auditlogs/auditLogsAction';
 import {getSSOConfigs,loadModifyConfig,loadTestSsoIdp}  from './app/ssoconfigs/ssoConfigsAction';
+import ViewHelp from './app/common/ViewHelp';
+import helpapi from './app/accounts/accountsAPI';
 
 let store = configureStore();
 
@@ -86,6 +88,26 @@ function renderSecAdmApplication(elem, renderName) {
         
     }
 }
+/**
+ * renderManageConfigsData
+ * @param {*} elem 
+ */
+function renderHelpContent(elem,helpurl) {
+    helpapi.getHelp(helpurl).then(response => response).then((helpcontent) => {
+        if(helpcontent){
+            let open = true;
+           console.log('Help Content : ');
+           console.log(JSON.stringify(helpcontent));
+           ReactDOM.render(
+            <Provider store={store}>
+            <ViewHelp showAlert={open} aheader={helpurl} abody={JSON.stringify(helpcontent)} abtnlbl={'Close'}/>
+            </Provider>,
+            document.querySelector('#'+elem));
+        }
+        return helpcontent
+    });
+}
+
 /**
  * renderManageConfigsData
  * @param {*} elem 
@@ -254,10 +276,12 @@ const checkIfAreasDefined = (areas) => {
 };
 
 const renderWelcomePage = (elem) => {
-    //renderSecAdmApplication(elem,rname.RN_ACCOUNTS);
-    document.getElementById(elem).innerHTML = "<h3>Welcome to the Security Administration Application Page. Please click on the links to perform different administrative activities for the applications.</h3>";
+    renderSecAdmApplication(elem,rname.RN_ACCOUNTS);
+    //document.getElementById(elem).innerHTML = "<h3>Welcome to the Security Administration Application Page. Please click on the links to perform different administrative activities for the applications.</h3>";
 };
-
+const renderhelpinfo = (elem,_helpid) => {
+    renderHelpContent(elem,_helpid);
+};
 const unMountNMountContainerNode = () => {
     $("div").remove("#" + c.appContentId);
     $('<div id="' + c.appContentId + '" class="main-content p-4 m-4 mx-auto"></div>').insertAfter($("#" + c.navId));
@@ -290,7 +314,8 @@ let w2aIndex = {
     'reloadContent': unMountNMountContainerNode,
     'renderWelcomePage': renderWelcomePage,
     'nameId': c.appNameId,
-    'contentId': c.appContentId
+    'contentId': c.appContentId,
+    'renderhelpinfo':renderhelpinfo
 };
 
 window.w2aIndex = w2aIndex;

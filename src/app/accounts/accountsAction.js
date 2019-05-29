@@ -84,27 +84,23 @@ export function getTenantAccountsSuccess(accountsdata) {
 export function getTenantAccountsError(accountsdata) {
     return { type: types.GET_TENANTS_ERROR, accountsdata };
 }
-export function getSSOConfigs() {
+export function getHelp(helpurl) {
     return function (dispatch, getState) {
         const state = getState();
-        return accountsAPI.getSSOConfigs().then(ssoconfigs => {
-            if(islinked){
-                if(ssoconfigs && ssoconfigs.message){
-                    dispatch(getSSOConfigsError(ssoconfigs));
-                }else if(ssoconfigs){
-                    dispatch(getSSOConfigsSuccess(ssoconfigs));
-                }
-            }else{
-                throw ssoconfigs;
+        return accountsAPI.getHelp(helpurl).then(helpcontent => {
+            if(helpcontent && helpcontent.message){
+                dispatch(getHelpError(helpcontent));
+            }else if(helpcontent){
+                dispatch(getHelpSuccess(ssoconfigs));
             }
         }).catch(error => {
             generateAppErrorEvent(error.type,error.status,error.message,error);
         });
     };
 }
-export function getSSOConfigsSuccess(ssoconfigs) {
-    return { type: types.GET_SSOCONFIGS_SUCCESS, ssoconfigs };
+export function getHelpSuccess(helpcontent) {
+    return { type: types.GET_HELP_SUCCESS, helpcontent };
 }
-export function getSSOConfigsError(ssoconfigs) {
-    return { type: types.GET_SSOCONFIGS_ERROR, ssoconfigs };
+export function getHelpError(helpcontent) {
+    return { type: types.GET_HELP_ERROR, helpcontent };
 }

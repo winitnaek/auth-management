@@ -78,5 +78,21 @@ class accountsAPI {
             return error;
         });
     }
+    static getHelp(helpurl) {
+        var svcs_url = helpurl;
+        return fetch(URLUtils.buildHelpURL(svcs_url), {
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                var errorCode = response.status;
+                var errorMsg = 'Unable to Get Help Content. ' + ADMIN_ERROR_MSG;
+                return new AppError(errorMsg, errorCode);
+            }
+        }).catch(error => {
+            return error;
+        });
+    }
 }
 export default accountsAPI;

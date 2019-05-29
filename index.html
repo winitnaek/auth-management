@@ -40,8 +40,11 @@
           <i class="fas fa-medkit fa-sm"></i> Health
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#" onclick="renderhelpinfo('metrics/process.uptime');">Process Uptime</a>
+          <a class="dropdown-item" href="#" onclick="renderhelpinfo('metrics/system.cpu.usage');">CPU Usage</a>
+          <a class="dropdown-item" href="#" onclick="renderhelpinfo('metrics/system.cpu.count');">CPU Count</a>
+          <a class="dropdown-item" href="#" onclick="renderhelpinfo('metrics/jvm.memory.used');">JVM Memory Used</a>
+          <a class="dropdown-item" href="#" onclick="renderhelpinfo('metrics/http.server.requests');">Server Requests</a>
       </li>
       <li class="nav-item">
         <a class="nav-link"  href="#" onclick="macLogin.doLogout();">Logout</span></a>
@@ -53,6 +56,8 @@
   </div>
 </nav>
   <div id="appContent" class="main-content p-4 m-4">
+  </div>
+  <div id="helpContent" class="main-content p-4 m-4">
   </div>
   <canvas id="theCanvas"></canvas>
   <script type="text/javascript" src="./res/js/jquery-3.2.1.min.js"></script>
@@ -121,6 +126,9 @@
           console.log('Error Data');
           console.log(e.errorData);
 
+    }
+    function renderhelpinfo(_helpid){
+      w2aIndex.renderhelpinfo('helpContent',_helpid);
     }
   </script>
 </body>
