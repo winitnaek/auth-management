@@ -249,6 +249,17 @@ class AddSSOConfig extends React.Component {
             console.log('isvalid cert ==>')
             console.log(isvalid);
             iscertvalid =isvalid;
+            if(iscertvalid){
+                let isval = false;
+                var n   = caCert.lastIndexOf("=");
+                var res = caCert.charAt((n+2));
+                if(n !=-1 && res==='-'){
+                    isval = true;
+                }else{
+                    isval = false;
+                }
+                iscertvalid = isval;
+            }
         } catch (e) {
            console.log(e);
            console.log('Unable to validate Entered certificate PEM Text. >>');

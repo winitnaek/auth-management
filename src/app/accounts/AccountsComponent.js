@@ -105,7 +105,11 @@ class AccountsComponent extends React.Component {
     }
     handleTenantConfigSave(selectedConfig) {
         var data = this.state.linkrow;
-        accountsAPI.linkSSOConfigToTenant(data.acctName, data.id, false).then(response => response).then((repos) => {
+        console.log('selectedConfig');
+        console.log(selectedConfig);
+        console.log('data');
+        console.log(data);
+        accountsAPI.linkSSOConfigToTenant(data.acctName, selectedConfig.value, false).then(response => response).then((repos) => {
             if(repos){
                 var accounts =[];
                 for (let [key, value] of Object.entries(this.props.accountsdata)) {
