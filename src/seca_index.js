@@ -57,13 +57,13 @@ function renderSecAdmApplication(elem, renderName) {
              throw new SubmissionError({_error:  error });
         });*/
     }else if(renderName==rname.RN_ACCOUNTS){
+        ReactDOM.render(<Provider store={store}><Progress/></Provider>,document.querySelector('#'+elem));
         store.dispatch(getTenantAccounts(true)).then((result) => {
+         setTimeout(function() {    
             renderAccountsData(elem);
-            //setTimeout(function() {    
-            //    renderAdminData(elem);
-            //}.bind(this), 200)
+         }.bind(this), 200)
         }).catch((error) => {
-            throw new SubmissionError({ _error: error });
+             throw new SubmissionError({_error:  error });
         });
     }else if(renderName==rname.RN_SSO_CONFIGS){
        store.dispatch(getTenantAccounts(true));
