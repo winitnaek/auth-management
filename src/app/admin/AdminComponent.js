@@ -94,6 +94,8 @@ class AdminComponent extends React.Component {
     renderAdminUI(admindata){
         if(admindata){
            var lastPerSyncDt = new Date(this.props.admindata.lastPerSync);
+           var minLtPerSynDt = new Date(); minLtPerSynDt.setDate(minLtPerSynDt.getDate()-30);
+           var maxLtPerSynDt = new Date();
            return(
                 <div class="row h-100 justify-content-center align-items-center">
                     <Container>
@@ -142,7 +144,7 @@ class AdminComponent extends React.Component {
                                                 <Label sm={4}>Last Periodic Sync Date/Time</Label>
                                                 <Col sm={3}>
                                                     <JqxDateTimeInput ref='lastPerSyncDt' height={30} width={175} animationType={'fade'}
-                                                        dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastPerSyncDt}`} formatString="yyyy-MM-ddThh:mm:ss"/>
+                                                        min ={minLtPerSynDt} max={maxLtPerSynDt} dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastPerSyncDt}`} formatString="yyyy-MM-ddThh:mm:ss"/>
                                                 </Col>
                                                 <Col sm={2}>
                                                     <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.runPeriodicDataSyncProc}>Sync Data</Button>
