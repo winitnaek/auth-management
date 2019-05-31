@@ -178,7 +178,7 @@ export function getSyncInfoError(syncInfo) {
 export function getProductsByTenants(accountName) {
     return function (dispatch, getState) {
         const state = getState();
-        return adminAPI.getProductsByTenants().then(products => {
+        return adminAPI.getProductsByTenants(accountName).then(products => {
             if(products){
                 if(products && products.message){
                     dispatch(getProductsByTenantsError(products));

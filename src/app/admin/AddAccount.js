@@ -8,7 +8,10 @@ class AddAccount extends React.Component {
         let accounts =[];
         accounts.push({'value':'IBM','label':'IBM'},{'value':'Panera','label':'Panera'},{'value':'Dannys','label':'Dannys'});
         let products =[];
-        products.push({'value':'TPF','label':'TPF'},{'value':'CF','label':'CF'},{'value':'TF','label':'TF'});
+        this.props.products.forEach(function(product, index) {
+            console.log(product);
+            products.push({'value':product.id,'label':product.prodName});
+        });
         this.state = {
             showAddAccount: this.props.showAddAccount,
             accounts:accounts,

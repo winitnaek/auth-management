@@ -148,7 +148,7 @@ class adminActionAPI {
     }
     static getProductsByTenants(accountName) {
         let paramurl = `${'?accountName='}${accountName}`;
-        var svcs_url = `${svcs.GET_PRODUCT_BY_TENANTS}${paramurl}`;
+        var svcs_url = `${svcs.GET_PRODUCT_BY_TENANT}`;
         return fetch(URLUtils.buildURL(svcs_url), {
             credentials: 'same-origin'
         }).then(response => {

@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
 import {Button, Card, CardHeader, CardBody, Col,Row} from 'reactstrap';
 import {deleteTenant}  from './adminAction';
+import adminAPI from './adminAPI';
 import AddAccount from './AddAccount';
 class AdminDatasetsGrid extends React.Component {
     constructor(props) {
@@ -24,7 +25,8 @@ class AdminDatasetsGrid extends React.Component {
         this.state = {
             source: source,
             deleted:false,
-            openAddAdminAccount:false
+            openAddAdminAccount:false,
+            products:[]
         };
         this.handleAddAccountCancel = this.handleAddAccountCancel.bind(this);
         this.handleAddAccountSave = this.handleAddAccountSave.bind(this);
@@ -40,7 +42,15 @@ class AdminDatasetsGrid extends React.Component {
         this.setState({openAddAdminAccount:false});
     }
     onAddAdminAccount() {
-        this.setState({openAddAdminAccount:true});
+        adminAPI.getProductsByTenants().then(response => response).then((products) => {
+            console.log('products');
+            console.log(products);
+            if(products && products.length > 0){
+                this.setState({openAddAdminAccount:true,products:products});
+                
+            }
+            return products
+        });
     }
     render() {
         let dataAdapter = new $.jqx.dataAdapter(this.state.source);
@@ -100,7 +110,7 @@ class AdminDatasetsGrid extends React.Component {
                     </Card>
                 </Col>
             </Row>
-            {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel} handleSave={this.handleAddAccountSave} showAddAccount={this.state.openAddAdminAccount} />):null}
+            {this.state.openAddAdminAccount ? (<AddAccount handleCancel={this.handleAddAccountCancel} handleSave={this.handleAddAccountSave} products ={this.state.products} showAddAccount={this.state.openAddAdminAccount} />):null}
             </div>
         );
     }
