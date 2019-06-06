@@ -11,19 +11,21 @@ const macWs = (function () {
   function inValidLogin() {
 
   }
-  function userLogin(empId, pass) {
+  function userLoginTest(empId, pass) {
     var credentials = {userName: empId, password:pass};
     getUserProfile(true,empId);
   }
-  function userLoginOld(empId, pass) {
+  function userLogin(empId, pass) {
     var credentials = {userName: empId, password:pass};
-    return fetch('/api/login/f?a=' + btoa(JSON.stringify(credentials)), { method: 'GET',
+    return fetch('/sws/r/webapi/login?username='+empId+'&password='+pass, { method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     credentials: 'same-origin'}).then(function (resp) {
       if (resp.ok) {
+        console.log('resp');
+        console.log(resp);
         getUserProfile(true,empId);         
       }else{
         $('#inputUsername').addClass('is-invalid');

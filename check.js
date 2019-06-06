@@ -6,12 +6,11 @@ if(!userdata){
 const macLogin = (function () {
     function logout() {
       sessionStorage.removeItem(macLogin.appdata.userkey);
-      /*fetch('/api/logout',{
+      fetch('/sws/r/webapi/logout',{
         credentials: 'same-origin'
       }).then(function (resp) {        
-          window.location = "index.html";        
-      });*/
-      window.location = "login.html";     
+          window.location = "login.html";        
+      });
     }
     return {
       appdata: {
