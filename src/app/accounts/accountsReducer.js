@@ -8,6 +8,11 @@ export default function accountsReducer(state = initialState.accountsdata, actio
             accounts: Object.assign([], ...state.accounts, action.accountsdata)
         });
     }
+    case types.GET_TENANTS_ERROR: {
+      return Object.assign({}, ...state, {
+          accounts: Object.assign([], ...state.accounts, action.accountsdata)
+      });
+  }
     default: 
       return state;
   }
