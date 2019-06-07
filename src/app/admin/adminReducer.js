@@ -12,6 +12,15 @@ export default function adminReducer(state = initialState.admindata, action) {
             adminTenants: Object.assign([], ...state.adminTenants, state.adminTenants),
         });
     }
+    case types.GET_SYNC_INFO_ERROR: {
+        return Object.assign({}, ...state, {
+            lastFullSync:action.admindata.lastFullSync,
+            lastPerSync:action.admindata.lastPerSync,
+            isPerSyncOn:action.admindata.isPerSyncOn,
+            isSyncInProgress:action.admindata.isSyncInProgress,
+            adminTenants: Object.assign([], ...state.adminTenants, state.adminTenants),
+        });
+    }
     case types.GET_ADMINTENANT_SUCCESS: {
         return Object.assign({}, ...state, {
             lastFullSync:state.lastFullSync,
