@@ -9,7 +9,7 @@ const macLogin = (function () {
       fetch('/sws/r/webapi/logout',{
         credentials: 'same-origin'
       }).then(function (resp) {        
-          window.location = "login.html";        
+          window.location = "mgmtui_login";        
       });
     }
     return {
