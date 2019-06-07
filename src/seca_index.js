@@ -99,8 +99,8 @@ function renderHelpContent(elem,helpurl) {
     helpapi.getHelp(helpurl).then(response => response).then((helpcontent) => {
         if(helpcontent){
             let open = true;
-           console.log('Help Content : ');
-           console.log(JSON.stringify(helpcontent));
+           //console.log('Help Content : ');
+           //console.log(JSON.stringify(helpcontent));
            ReactDOM.render(
             <Provider store={store}>
             <ViewHelp showAlert={open} aheader={helpurl} abody={JSON.stringify(helpcontent)} abtnlbl={'Close'}/>

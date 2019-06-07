@@ -15,7 +15,6 @@ class ViewHelp extends React.Component {
     this.toggle = this.toggle.bind(this);
   }
   toggle() {
-    console.log('clicked');
     this.props.showAlert = false;
     this.setState({
       showAlert: false
