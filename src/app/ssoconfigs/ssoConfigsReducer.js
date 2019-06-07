@@ -8,6 +8,11 @@ export default function ssoConfigsReducer(state = initialState.ssoconfigsdata, a
         ssoconfigs: Object.assign([], ...state.ssoconfigs, action.ssoconfigsdata)
       });
     }
+    case types.GET_SSOCONFIG_BYTENANTS_ERROR: {
+      return Object.assign({}, ...state, {
+        ssoconfigs: Object.assign([], ...state.ssoconfigs, action.ssoconfigsdata)
+      });
+    }
     default:
       return state;
   }

@@ -8,6 +8,11 @@ export default function auditLogsReducer(state = initialState.auditlogsdata, act
         auditlogs: Object.assign([], ...state.auditlogs, action.auditlogsdata)
       });
     }
+    case types.GET_AUDITLOGS_ERROR: {
+      return Object.assign({}, ...state, {
+        auditlogs: Object.assign([], ...state.auditlogs, action.auditlogsdata)
+      });
+    }
     default:
       return state;
   }
