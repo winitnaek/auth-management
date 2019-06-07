@@ -91,6 +91,9 @@ class AdminComponent extends React.Component {
             this.setState({perSyncOnOffLabel:'Periodic Sync Off'});
         }
     }
+    componentWillUnmount(){
+        clearInterval(this.syncinterval);
+    }
     renderAdminUI(admindata){
         if(admindata){
            var lastPerSyncDt = new Date(this.props.admindata.lastPerSync);
