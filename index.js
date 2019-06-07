@@ -24,8 +24,7 @@ const macWs = (function () {
     },
     credentials: 'same-origin'}).then(function (resp) {
       if (resp.ok) {
-        console.log('resp');
-        console.log(resp);
+        console.log(empId+' logged in successfully.');
         getUserProfile(true,empId);         
       }else{
         $('#inputUsername').addClass('is-invalid');
@@ -64,13 +63,11 @@ $(document).ready(function () {
   var uval = macWs.getURLParameter('user');
   
   getUserProfile = function (formbased,userid) {
-    var upp ="{\r\n            \"userId\": \"001907\"}"
-    setUserProfile(upp);
+    var upp ={"userId":userid};
+    setUserProfile( JSON.stringify(upp));
   };
   setUserProfile = function(userProfile){
    var userdata = JSON.parse(userProfile);
-   console.log('setUserProfile userdata');
-   console.log(userdata);
    sessionStorage.setItem("up", userProfile);
    if (userdata) {
     window.location = "index.html";
