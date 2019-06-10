@@ -10,11 +10,19 @@ const macLogin = (function () {
       credentials: 'same-origin'
     }).then(function (resp) {
       console.log("Logout Success: " + JSON.stringify(resp));
+      clearSyncInprogCheckInterval();
       window.location = "login.html?user=nouser";
-    }).catch(function(error) {
+    }).catch(function (error) {
       console.log('There has been a problem with "logout": ', error.message);
+      clearSyncInprogCheckInterval();
       window.location = "login.html?user=nouser";
     });
+
+    function clearSyncInprogCheckInterval() {
+      if (window.checkSyncInProgressInterval) {
+        clearInterval(window.checkSyncInProgressInterval);
+      }
+    }
   }
   return {
     appdata: {

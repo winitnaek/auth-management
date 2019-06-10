@@ -1,16 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import JqxGrid from '../../deps/jqwidgets-react/react_jqxgrid.js';
+import { connect } from 'react-redux';
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, CustomInput, Form, FormGroup, Label, Row } from 'reactstrap';
+import { bindActionCreators } from 'redux';
 import JqxDateTimeInput from '../../deps/jqwidgets-react/react_jqxdatetimeinput.js';
-import {Alert, Button, Card, CardHeader, CardBody,FormGroup, Label, Col, Form,Input,Container,Row,CustomInput} from 'reactstrap';
-import * as svcs from '../../base/constants/ServiceUrls';
-import URLUtils from '../../base/utils/urlUtils';
-import {runInitialDataSync,runPeriodicDataSync,enablePeriodicDataSync,deleteTenant,getSyncInfo,addTenant}  from './adminAction';
-import {divStylePA} from '../../base/constants/AppConstants';
-
+import { addTenant, deleteTenant, enablePeriodicDataSync, getSyncInfo, runInitialDataSync, runPeriodicDataSync } from './adminAction';
 import AdminDatasetsGrid from './AdminDatasetsGrid';
+
 const SYNCINFO_TIMER =10000;
 class AdminComponent extends React.Component {
     constructor(props) {
@@ -47,6 +42,7 @@ class AdminComponent extends React.Component {
         
         this.handleSyncInProgress();
         this.syncinterval = setInterval(this.handleSyncInProgress.bind(this), SYNCINFO_TIMER);
+        window.checkSyncInProgressInterval = this.syncinterval;
     }
     runPeriodicDataSyncProc(){
         this.props.actions.runPeriodicDataSync(this.refs.lastPerSyncDt.val());
