@@ -173,9 +173,6 @@ class SSOConfigComponent extends React.Component {
             { text: 'Modify', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return `<a href="#" title="${'Modify'}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onModifyConfig('${ndex}')}>${'Modify '+rowdata.dsplName}</button></div></a>`;}
             },
-            { text: 'Test Config', cellsalign: 'center', align: 'center', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
-                return `<a href="#" title="${'Test Config '+rowdata.dsplName}"><div style="text-align:center;" class="align-self-center align-middle"><button type="button" style="padding-top:0.1rem;cursor: pointer;font-size:.90rem" class="btn btn-link align-self-center" onClick={onTestSsoIdp('${ndex}')}>${'Test '+rowdata.dsplName}</button></div></a>`;}
-            },
             { text: '        ', cellsalign: 'center', width: '70', align: 'center', datafield: 'Delete', columntype: 'button', cellsrenderer: function (ndex, datafield, value, defaultvalue, column, rowdata) {
                 return 'Delete';
                }, buttonclick: function (id) {

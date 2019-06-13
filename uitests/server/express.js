@@ -17,8 +17,8 @@ const put = 'PUT';
  */
 const host  = 'http://localhost:'; // REST Web Service HOST 
 const port  = '9090';            // REST Web Service PORT
-const username = 'WSUSERXXX';  // REST Web Service USER
-const password = 'WSUSERXXX';  // REST Web Service PASS
+const username = 'CFWSUSERDEV';  // REST Web Service USER
+const password = 'bsi';  // REST Web Service PASS
 /**
  * approuter
  * @param {*} app 
