@@ -269,8 +269,8 @@ class AddSSOConfig extends React.Component {
                                         name="selAccount"
                                         value={this.state.selectedAccount}
                                         onChange={this.handleAccountChange}
-                                        isSearchable={false}
-                                        isClearable={false}
+                                        isSearchable={true}
+                                        isClearable={true}
                                         isMulti={false}
                                         options={this.state.accounts}
                                         isLoading={this.state.isCompLoading}
