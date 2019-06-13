@@ -24,8 +24,12 @@ class AdminComponent extends React.Component {
         };
         let perSyncOnOffLabel  ='Periodic Sync Off';
         let isPerSyncOnOff=false;
+        let dsyncperbtn = true;
+        let dsyncbtn = false;
         if(this.props.admindata.isPerSyncOn){
             isPerSyncOnOff =true;
+            dsyncbtn = false;
+            dsyncperbtn=false;
             perSyncOnOffLabel='Periodic Sync On';
         }
         this.state = {
@@ -33,6 +37,7 @@ class AdminComponent extends React.Component {
             perSyncOnOffLabel:perSyncOnOffLabel,
             isPerSyncOnOff:isPerSyncOnOff,
             dsyncbtn:false,
+            dsyncperbtn:dsyncperbtn,
             refreshgrid:false
         };
         this.perSyncOnOffChanged = this.perSyncOnOffChanged.bind(this);
@@ -47,25 +52,35 @@ class AdminComponent extends React.Component {
     runPeriodicDataSyncProc(){
         this.props.actions.runPeriodicDataSync(this.refs.lastPerSyncDt.val());
         this.props.admindata.isSyncInProgress =true;
-        this.setState({dsyncbtn:true});
+        this.setState({dsyncbtn:true,dsyncperbtn:true});
     }
     runInitialDataSyncProc(){
         this.props.actions.runInitialDataSync();
         this.props.admindata.isSyncInProgress =true;
-        this.setState({dsyncbtn:true});
+        this.setState({dsyncbtn:true,dsyncperbtn:true});
     }
     handleSyncInProgress(){
         this.props.actions.getSyncInfo().then(response => {
             if(this.props.admindata && this.props.admindata.message){
-                this.setState({dsyncbtn:false});
+                this.setState({dsyncbtn:false,dsyncperbtn:false});
                 console.log('Error Occured In Sync handleSyncInProgress');
                 clearInterval(this.syncinterval);
                 console.log('Sync interval is cleared.');
             }else if(this.props.admindata.isSyncInProgress===true){
                 this.setState({dsyncbtn:true});
+                if(this.props.admindata.isPerSyncOn){
+                    this.setState({dsyncperbtn:false});
+                }else{
+                    this.setState({dsyncperbtn:true});
+                }
                 //console.log('Sync Process is In-Progress');
             }else if(this.props.admindata.isSyncInProgress===false){
                 this.setState({dsyncbtn:false});
+                if(this.props.admindata.isPerSyncOn){
+                    this.setState({dsyncperbtn:false});
+                }else{
+                    this.setState({dsyncperbtn:true});
+                }
                 //console.log('Sync Process is not In-Progress');
             }
             return response
@@ -80,11 +95,11 @@ class AdminComponent extends React.Component {
         if(this.sfSyncOnOff.checked==true){
             this.props.actions.enablePeriodicDataSync(true);
             console.log('checked');
-            this.setState({perSyncOnOffLabel:'Periodic Sync On'});
+            this.setState({perSyncOnOffLabel:'Periodic Sync On',dsyncperbtn:false});
         }else{
             this.props.actions.enablePeriodicDataSync(false);
             console.log('unchecked');
-            this.setState({perSyncOnOffLabel:'Periodic Sync Off'});
+            this.setState({perSyncOnOffLabel:'Periodic Sync Off',dsyncperbtn:true});
         }
     }
     componentWillUnmount(){
@@ -121,7 +136,7 @@ class AdminComponent extends React.Component {
                                                     <Label>{admindata.lastFullSync}</Label>
                                                 </Col>
                                                 <Col sm={3}>
-                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.runInitialDataSyncProc}>Re-Run Full Data Sync</Button>
+                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.runInitialDataSyncProc}>Rerun Full Data Sync</Button>
                                                 </Col>
                                             </FormGroup>
                                         </Form>
@@ -146,7 +161,7 @@ class AdminComponent extends React.Component {
                                                         min ={minLtPerSynDt} max={maxLtPerSynDt} dropDownHorizontalAlignment={'left'} disabled={false} value={`${lastPerSyncDt}`} formatString="yyyy-MM-ddThh:mm:ss"/>
                                                 </Col>
                                                 <Col sm={2}>
-                                                    <Button color="primary" disabled={this.state.dsyncbtn} size="sm" className="btn btn-primary" onClick={this.runPeriodicDataSyncProc}>Sync Data</Button>
+                                                    <Button color="primary" disabled={this.state.dsyncperbtn} size="sm" className="btn btn-primary" onClick={this.runPeriodicDataSyncProc}>Sync Data</Button>
                                                 </Col>
                                                 <CustomInput type="switch" innerRef={(input) => this.sfSyncOnOff = input}  id="sfSyncOnOff" onChange={this.perSyncOnOffChanged} defaultChecked={this.state.isPerSyncOnOff} name="sfSyncOnOff" label={this.state.perSyncOnOffLabel} />
                                             </FormGroup>
